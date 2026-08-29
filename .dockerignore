@@ -1,0 +1,13 @@
+*
+
+!bun.lock
+!db/
+!events/
+!patches/
+!utils/
+!healthcheck.sh
+!index.ts
+!package.json
+!tsconfig.json
+
+db/soberbot*

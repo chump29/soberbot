@@ -1,0 +1,24 @@
+services:
+  soberbot:
+    container_name: soberbot
+    image: git.postfmly.com/admin/soberbot:arm64
+    restart: unless-stopped
+    ports:
+      - "8008:8008"
+    volumes:
+      - db:/app/db
+    environment:
+      - LOGO_PORT=8008
+      - LOGO_URL=https://soberbot.postfmly.us/soberbot.webp
+      - TZ=America/Chicago
+    env_file: .env
+    labels:
+      - wud.display.name=SoberBot
+      - homepage.group=Personal
+      - homepage.name=SoberBot
+      - homepage.icon=https://soberbot.postfmly.com/soberbot.webp
+
+volumes:
+  db:
+
+networks: {}
