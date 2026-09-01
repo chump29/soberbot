@@ -39,9 +39,10 @@
     "prod": "bun run index.ts",
     "scan": "bun audit && bun run --bun cve-lite --check-overrides",
     "sql": "drizzle-kit generate",
-    "test": "bun test --isolate --bail",
+    "test": "bun test --isolate --dots --bail",
     "test:coverage": "bun test --isolate --dots --coverage --coverage-dir ./tests/coverage --coverage-reporter=text --coverage-reporter=lcov --bail",
     "test:coverage:full": "bun test --isolate --coverage --coverage-dir ./tests/coverage --coverage-reporter=text --coverage-reporter=lcov --bail",
+    "test:full": "bun test --isolate --bail",
     "updates": "bunx --bun npm-check-updates --dep overrides,prod,dev --cooldown 0 --install never --packageManager bun --peer"
   },
   "lint-staged": {
@@ -52,7 +53,7 @@
     "@biomejs/biome": "2.5.11",
     "@types/bun": "1.4.0",
     "@types/node": "26.4.0",
-    "cspell": "10.1.1",
+    "cspell": "10.2.0",
     "cve-lite-cli": "1.31.0",
     "globals": "17.11.0",
     "typescript": "7.0.2"
@@ -61,8 +62,8 @@
     "@faker-js/faker": "^10.6.0",
     "@jarrodek/pluralize": "^1.0.2",
     "@postfmly/checkrate": "^1.0.12",
-    "@postfmly/logger": "^1.0.29",
-    "@postfmly/logoserver": "^1.2.3",
+    "@postfmly/logger": "^1.0.30",
+    "@postfmly/logoserver": "^1.2.5",
     "@postfmly/types": "^1.0.2",
     "dayjs": "^1.11.23",
     "discord.js": "^14.27.0",
@@ -72,7 +73,7 @@
     "valibot": "^1.4.2"
   },
   "devDependencies": {
-    "@postfmly/config": "^1.4.54",
+    "@postfmly/config": "^1.4.55",
     "drizzle-kit": "1.0.0-rc.4",
     "husky": "^9.1.7",
     "lcov-total": "^2.1.1",
@@ -81,7 +82,7 @@
   },
   "packageManager": "bun@1.4.0",
   "engines": {
-    "bun": "^1.4.0"
+    "bun": "~1.4.0"
   },
   "engineStrict": true,
   "patchedDependencies": {

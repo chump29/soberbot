@@ -25,7 +25,7 @@
 
 ### 🔗 Invite Link
 
-[Add SoberBot](https://discord.com/oauth2/authorize?client_id=1523517133835866162&permissions=67584&integration_type=0&scope=bot)
+[Add SoberBot](https://discord.com/oauth2/authorize?client_id=1523517133835866162&permissions=83968&integration_type=0&scope=bot)
 
 ---
 
@@ -51,64 +51,6 @@
 |   Reset Date   |     `/reset <name>`      | SendMessages  |
 |    Set Date    | `/set YYYY-MM-DD <name>` | SendMessages  |
 |  Show Streak   |  `/streak <name\|all>`   | SendMessages  |
-
----
-
-### 🛠️ Environment Management
-
-#### NPM ([Bun](https://github.com/oven-sh/bun "Bun") toolkit):
-
-| 📋 Task |  🔧 Command   |
-|:-------:|:-------------:|
-| Upgrade | `bun upgrade` |
-
----
-
-### 📦 Dependency Management
-
-#### Installation & Removal:
-
-|        📋 Task         |            🔧 Command (Full)             |           🔧 Command (Short)           |
-|:----------------------:|:----------------------------------------:|:--------------------------------------:|
-|      Install DEV       |              `bun install`               |                `bun i`                 |
-|      Install PROD      |        `bun install --production`        |               `bun i -p`               |
-|     Add dependency     |      `bun add [package][@version]`       |      `bun a [package][@version]`       |
-|   Add devDependency    | `bun add --save-dev [package][@version]` |     `bun a -d [package][@version]`     |
-| Add optionalDependency | `bun add --optional [package][@version]` | `bun a --optional [package][@version]` |
-|   Add peerDependency   |   `bun add --peer [package][@version]`   |   `bun a --peer [package][version]`    |
-|       Add Global       |  `bun add --global [package][@version]`  |     `bun a -g [package][@version]`     |
-|   Remove Dependency    |          `bun remove [package]`          |           `bun r [package]`            |
-
-#### Maintenance & Quality:
-
-|     📋 Task     |   🔧 Command (Full)    | 🔧 Command (Short)  |
-|:---------------:|:----------------------:|:-------------------:|
-|  Check Updates  |     `bun outdated`     |       &mdash;       |
-|   Update All    |      `bun update`      |       &mdash;       |
-| Update Specific | `bun update [package]` |       &mdash;       |
-| Security Audit  |      `bun audit`       |       &mdash;       |
-|  Package Info   |  `bun info [package]`  |       &mdash;       |
-|   Run Script    |   `bun run [script]`   |   `bun [script]`    |
-|      List       |       `bun list`       |       &mdash;       |
-|   List Extra    |    `bun list --all`    |       &mdash;       |
-|    Hierarchy    | `bun pm why [package]` | `bun why [package]` |
-
----
-
-### 🧪 Development
-
-#### Scripts:
-
-|    📋 Task     |  🔧 Command (Full)   | 🔧 Command (Short) |
-|:--------------:|:--------------------:|:------------------:|
-| Lint All (DEV) |    `bun run lint`    |     `bun lint`     |
-| Lint All (CI)  |  `bun run lint:ci`   |   `bun lint:ci`    |
-|   Lint Biome   | `bun run lint:biome` |  `bun lint:biome`  |
-|    Lint ENV    |  `bun run lint:env`  |   `bun lint:env`   |
-|    Run DEV     |    `bun run dev`     |     `bun dev`      |
-|    Run PROD    |    `bun run prod`    |     `bun prod`     |
-|      Test      |    `bun run test`    |       &mdash       |
-|  Generate SQL  |    `bun run sql`     |     `bun sql`      |
 
 ---
 

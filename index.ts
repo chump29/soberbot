@@ -11,16 +11,13 @@ const { DEBUG, LOGO_NAME, LOGO_PATH, LOGO_PORT } = env
 
 const logoServer: LogoServer = new LogoServer({ DEBUG, LOGO_NAME, LOGO_PATH, LOGO_PORT } as ILogoServerConfig)
 
-new Promise<void>((resolve): void => {
-  DB.open()
-
-  resolve()
-})
-  .then(async (): Promise<void> => await loadCommands(client(logoServer)))
-  .then(async (): Promise<void> => await login())
-  .then(async (): Promise<void> => await logoServer.start())
-  .then((): void => info("🟢 Running..."))
-  .catch((e: unknown): void => {
+Promise.resolve()
+  .then(() => DB.open())
+  .then(() => loadCommands(client(logoServer)))
+  .then(() => login())
+  .then(() => logoServer.start())
+  .then(() => info("🟢 Running..."))
+  .catch((e: unknown) => {
     error(e)
     shutdown("ERROR")
   })

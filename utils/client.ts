@@ -36,14 +36,11 @@ const shutdown = (event: string): void => {
 
   isShutdown = true
 
-  new Promise<void>((resolve): void => {
-    DB.close()
-
-    resolve()
-  })
-    .then(async (): Promise<void> => await Promise.resolve(CLIENT?.destroy()))
-    .then(async (): Promise<void> => await SERVER?.stop())
-    .then((): void => process.exit(0))
+  Promise.resolve()
+    .then(() => DB.close())
+    .then(() => Promise.resolve(CLIENT?.destroy()))
+    .then(() => SERVER?.stop())
+    .then(() => process.exit(0))
 }
 
 const client = (logoServer: LogoServer): Client => {
