@@ -366,6 +366,13 @@ class SoberBotDatabase implements ISoberBotDatabase {
         return "❌ No dates to display"
       }
 
+      data.substances = data.substances.map(
+        (s: ISubstanceData): ISubstanceData => ({
+          ...s,
+          streak: SoberBotDatabase.getStreak(s.date)
+        })
+      )
+
       return data as IData
     } catch (e: unknown) {
       const msg: string = "❌ Could not get list"

@@ -8,16 +8,25 @@ import { eq, ne } from "drizzle-orm"
 import { titleCase } from "title-case"
 
 import { DATE_FORMAT, type ISubstance, type IUser, MAX_USER_ID_LEN, substances, users } from "../../db/schema.ts"
-import { DB, type IData, type ISubstanceData } from "../../utils/db.ts"
+import { DB, type IData } from "../../utils/db.ts"
 import { SUBSTANCES } from "../substances.ts"
 
 const LEN: number = 2
 
-const getName = (): string => fake.helpers.arrayElement(SUBSTANCES)
-const getDate = (): string => dayjs(fake.date.past({ years: 10 })).format(DATE_FORMAT)
-
 const userId: string = fake.string.numeric({ allowLeadingZeros: false, length: MAX_USER_ID_LEN })
 let name: string = ""
+
+const getName = (): string => {
+  let tmp: string = ""
+  do {
+    tmp = fake.helpers.arrayElement(SUBSTANCES)
+  } while (tmp === name)
+  if (name.length === 0) {
+    name = tmp
+  }
+  return tmp
+}
+const getDate = (): string => dayjs(fake.date.past({ years: 10 })).format(DATE_FORMAT)
 
 beforeAll(async (): Promise<void> => {
   DB.open()
@@ -42,15 +51,6 @@ beforeAll(async (): Promise<void> => {
         )
       )
   })
-
-  const [data]: Partial<ISubstanceData>[] = (await DB._db
-    .select({ name: substances.name })
-    .from(substances)
-    .where(eq(substances.id, 1))) as Partial<ISubstanceData>[]
-
-  assert(data)
-
-  name = data.name as string
 })
 
 afterAll((): void => {
