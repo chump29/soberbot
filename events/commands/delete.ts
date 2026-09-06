@@ -1,5 +1,7 @@
 import { parse } from "node:path"
 
+import { checkRate } from "@postfmly/checkrate"
+
 import {
   type ChatInputCommandInteraction,
   InteractionContextType,
@@ -9,8 +11,6 @@ import {
   SlashCommandBuilder,
   type SlashCommandStringOption
 } from "discord.js"
-
-import { checkRate } from "@postfmly/checkrate"
 
 import { MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
 import { DB } from "../../utils/db.ts"

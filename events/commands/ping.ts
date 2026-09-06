@@ -1,5 +1,7 @@
 import { parse } from "node:path"
 
+import { checkRate } from "@postfmly/checkrate"
+
 import {
   type ChatInputCommandInteraction,
   InteractionContextType,
@@ -8,8 +10,6 @@ import {
   type RESTPostAPIChatInputApplicationCommandsJSONBody,
   SlashCommandBuilder
 } from "discord.js"
-
-import { checkRate } from "@postfmly/checkrate"
 
 import { env } from "../../env.ts"
 

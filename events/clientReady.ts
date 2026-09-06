@@ -1,9 +1,9 @@
 import { readdir } from "node:fs/promises"
 import { parse } from "node:path"
 
-import { type Client, type RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js"
-
 import { info } from "@postfmly/logger"
+
+import { type Client, type RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js"
 
 import { env } from "../env.ts"
 import { type ICommandFile } from "./loadCommands.ts"

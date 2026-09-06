@@ -1,10 +1,10 @@
 import { default as process } from "node:process"
 
-import { ActivityType, Client, GatewayIntentBits } from "discord.js"
-
 import { info } from "@postfmly/logger"
 import { type LogoServer } from "@postfmly/logoserver"
 import { type Nullable } from "@postfmly/types"
+
+import { ActivityType, Client, GatewayIntentBits } from "discord.js"
 
 import { env } from "../env.ts"
 import { DB } from "./db.ts"

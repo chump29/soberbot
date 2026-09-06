@@ -1,5 +1,8 @@
 import { parse } from "node:path"
 
+import { checkRate } from "@postfmly/checkrate"
+
+import { default as dayjs } from "dayjs"
 import {
   type ChatInputCommandInteraction,
   InteractionContextType,
@@ -10,10 +13,6 @@ import {
   type SlashCommandIntegerOption,
   type SlashCommandStringOption
 } from "discord.js"
-
-import { checkRate } from "@postfmly/checkrate"
-
-import { default as dayjs } from "dayjs"
 
 import { DATE_FORMAT, MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
 import { DB } from "../../utils/db.ts"
