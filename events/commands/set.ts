@@ -27,7 +27,7 @@ const MAX_DAY: number = 31
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(import.meta.file).name)
+    .setName(parse(Bun.env.file).name)
     .setDescription("Set substance date")
     .addIntegerOption(
       (option: SlashCommandIntegerOption): SlashCommandIntegerOption =>

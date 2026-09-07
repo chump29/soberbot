@@ -1,6 +1,6 @@
 import { default as assert } from "node:assert/strict"
 
-import { afterAll, beforeAll, describe, expect, test } from "bun:test"
+import { afterAll, beforeAll, describe, expect, type jest, spyOn, test } from "bun:test"
 
 import { fakerEN_US as fake } from "@faker-js/faker"
 import { default as dayjs } from "dayjs"
@@ -28,7 +28,11 @@ const getName = (): string => {
 }
 const getDate = (): string => dayjs(fake.date.past({ years: 10 })).format(DATE_FORMAT)
 
+const infoSpy: jest.Mock = spyOn(console, "info")
+
 beforeAll(async (): Promise<void> => {
+  infoSpy.mockReset()
+
   DB.open()
 
   assert(DB._db)

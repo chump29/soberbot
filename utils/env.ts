@@ -61,4 +61,4 @@ const env = cleanEnv(Bun.env, {
   })
 })
 
-export { env, StringSchema }
+export { env }

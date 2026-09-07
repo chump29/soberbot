@@ -22,12 +22,12 @@ import {
   UserSchema,
   users
 } from "../db/schema.ts"
-import { env } from "../env.ts"
+import { env } from "./env.ts"
+import { type IEnv } from "./IEnv.ts"
 
 dayjs.extend(duration)
 
-// biome-ignore lint/nursery/useExplicitType: inferred
-const { DB_NAME, DB_PATH, DEBUG } = env
+const { DB_NAME, DB_PATH, DEBUG }: IEnv = env
 
 interface ISubstanceData {
   date: string

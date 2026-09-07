@@ -17,7 +17,7 @@ import { DB } from "../../utils/db.ts"
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(import.meta.file).name)
+    .setName(parse(Bun.env.file).name)
     .setDescription("Get substance streak(s)")
     .addStringOption(
       (option: SlashCommandStringOption): SlashCommandStringOption =>

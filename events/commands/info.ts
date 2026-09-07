@@ -13,15 +13,15 @@ import {
   SlashCommandBuilder
 } from "discord.js"
 
-import { env } from "../../env.ts"
 import { version } from "../../package.json" with { type: "json" }
+import { env } from "../../utils/env.ts"
+import { type IEnv } from "../../utils/IEnv.ts"
 
-// biome-ignore lint/nursery/useExplicitType: inferred
-const { LOGO_URL, NAME, COLOR } = env
+const { LOGO_URL, NAME, COLOR }: IEnv = env
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(import.meta.file).name)
+    .setName(parse(Bun.env.file).name)
     .setDescription(`Information about ${NAME}`)
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
     .setContexts(InteractionContextType.Guild)

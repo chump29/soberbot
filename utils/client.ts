@@ -6,11 +6,11 @@ import { type Nullable } from "@postfmly/types"
 
 import { ActivityType, Client, GatewayIntentBits } from "discord.js"
 
-import { env } from "../env.ts"
 import { DB } from "./db.ts"
+import { env } from "./env.ts"
+import { type IEnv } from "./IEnv.ts"
 
-// biome-ignore lint/nursery/useExplicitType: inferred
-const { DEBUG, TOKEN } = env
+const { DEBUG, TOKEN }: IEnv = env
 
 let SERVER: Nullable<LogoServer> = null
 

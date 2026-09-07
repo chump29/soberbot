@@ -11,14 +11,14 @@ import {
   SlashCommandBuilder
 } from "discord.js"
 
-import { env } from "../../env.ts"
+import { env } from "../../utils/env.ts"
+import { type IEnv } from "../../utils/IEnv.ts"
 
-// biome-ignore lint/nursery/useExplicitType: inferred
-const { NAME } = env
+const { NAME }: IEnv = env
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(import.meta.file).name)
+    .setName(parse(Bun.env.file).name)
     .setDescription(`Ping ${NAME}`)
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
     .setContexts(InteractionContextType.Guild)
