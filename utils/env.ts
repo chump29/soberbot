@@ -33,7 +33,7 @@ const PortSchema = union([
   literal("random"),
   pipe(StringSchema, toNumber(), integer(), minValue(MIN_PORT), maxValue(MAX_PORT))
 ])
-const TokenSchema = pipe(StringSchema, regex(/^\w{26}\.\w{6}\.\w{38}$/))
+const TokenSchema = pipe(StringSchema, regex(/^[\w-]{24,26}\.[\w-]{6}\.[\w-]{25,110}$/))
 
 const idValidator: ExactValidator<string> = makeExactValidator<string>((s: string): string => parse(IdSchema, s))
 const colorValidator: ExactValidator<string> = makeExactValidator<string>((s: string): string => parse(ColorSchema, s))
