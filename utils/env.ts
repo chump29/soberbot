@@ -48,9 +48,9 @@ const tokenValidator: ExactValidator<string> = makeExactValidator<string>((s: st
 const env = cleanEnv(Bun.env, {
   CHANNEL_ID: idValidator({ testDefault: fake.string.numeric({ allowLeadingZeros: false, length: ID_LEN }) }),
   COLOR: colorValidator({ default: "#78866b" }),
-  DB_NAME: stringValidator({ default: "soberbot.db" }),
+  DB_NAME: stringValidator({ default: "soberbot.db", testDefault: "soberbot.test.db" }),
   DB_PATH: stringValidator({ default: "./db" }),
-  DEBUG: bool({ default: false }),
+  DEBUG: bool({ default: false, testDefault: true }),
   LOGO_NAME: stringValidator({ default: "soberbot.webp" }),
   LOGO_PATH: stringValidator({ default: "./utils/images" }),
   LOGO_PORT: portValidator({ default: "random" }),

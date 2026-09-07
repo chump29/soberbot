@@ -33,7 +33,7 @@
 
 #### Role Permissions:
 
-|   ⚙️ Permission    |
+|   ⚙️ Permissions   |
 |:------------------:|
 |     EmbedLinks     |
 | ReadMessageHistory |
@@ -71,14 +71,12 @@
 
 ##### From `@postfmly/logoserver`:
 
-|  📝 Description   | 📌 Variable |    {...} Value    |
-|:-----------------:|:-----------:|:-----------------:|
-|     IPv4/IPv6     |  LOGO_IPv6  |  true/**false**   |
-|     Logo Name     |  LOGO_NAME  |   soberbot.webp   |
-|    Local Path     |  LOGO_PATH  |  ./utils/images   |
-|       Port        |  LOGO_PORT  | **Random**/[port] |
-|    Logo 2 Name    | LOGO2_NAME  |    [filename]     |
-| Logo 2 Local Path | LOGO2_PATH  |      [path]       |
+| 📝 Description | 📌 Variable |    {...} Value    |
+|:--------------:|:-----------:|:-----------------:|
+|   IPv4/IPv6    |  LOGO_IPv6  |  true/**false**   |
+|   Logo Name    |  LOGO_NAME  |   soberbot.webp   |
+|   Local Path   |  LOGO_PATH  |  ./utils/images   |
+|      Port      |  LOGO_PORT  | **Random**/[port] |
 
 ##### From `@postfmly/checkrate`:
 

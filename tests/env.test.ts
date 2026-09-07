@@ -17,19 +17,19 @@ describe("env", (): void => {
   test("COLOR", (): void => {
     expectTypeOf(COLOR).toEqualTypeOf<string>()
 
-    expect(COLOR.length).toBeGreaterThan(0)
+    expect(COLOR).toBe("#78866b")
   })
 
   test("DB_NAME", (): void => {
     expectTypeOf(DB_NAME).toEqualTypeOf<string>()
 
-    expect(DB_NAME.length).toBeGreaterThan(0)
+    expect(DB_NAME).toBe("soberbot.test.db")
   })
 
   test("DB_PATH", (): void => {
     expectTypeOf(DB_PATH).toEqualTypeOf<string>()
 
-    expect(DB_PATH.length).toBeGreaterThan(0)
+    expect(DB_PATH).toBe("./db")
   })
 
   test("DEBUG", (): void => {
@@ -41,19 +41,19 @@ describe("env", (): void => {
   test("LOGO_NAME", (): void => {
     expectTypeOf(LOGO_NAME).toEqualTypeOf<string>()
 
-    expect(LOGO_NAME.length).toBeGreaterThan(0)
+    expect(LOGO_NAME).toBe("soberbot.webp")
   })
 
   test("LOGO_PATH", (): void => {
     expectTypeOf(LOGO_PATH).toEqualTypeOf<string>()
 
-    expect(LOGO_PATH.length).toBeGreaterThan(0)
+    expect(LOGO_PATH).toBe("./utils/images")
   })
 
   test("LOGO_PORT", (): void => {
     expectTypeOf(LOGO_PORT).toEqualTypeOf<number | "random">()
 
-    expect((LOGO_PORT as string).length).toBeGreaterThan(0)
+    expect(LOGO_PORT as string).toBe("random")
   })
 
   test("LOGO_URL", (): void => {
@@ -65,7 +65,7 @@ describe("env", (): void => {
   test("NAME", (): void => {
     expectTypeOf(NAME).toEqualTypeOf<string>()
 
-    expect(NAME.length).toBeGreaterThan(0)
+    expect(NAME).toBe("SoberBot")
   })
 
   test("TOKEN", (): void => {

@@ -10,7 +10,7 @@
 ![SQLite](https://img.shields.io/badge/SQLite-3.49.2-informational?style=plastic&logo=sqlite "SQLite")
 
 ![CodeQL](https://github.com/chump29/soberbot/workflows/CodeQL/badge.svg "CodeQL") &nbsp;
-![Coverage](https://img.shields.io/badge/Coverage-100%25-success?style=plastic&logo=jest "Coverage")
+![Coverage](https://img.shields.io/badge/Coverage-99.73%25-success?style=plastic&logo=jest "Coverage")
 
 ![NO AI](https://img.shields.io/badge/NO-AI-orange?style=plastic "NO AI") &nbsp;
 ![License](https://img.shields.io/github/license/chump29/soberbot?style=plastic&color=blueviolet&label=License&logo=gplv3 "GPLv3")
@@ -33,7 +33,7 @@
 
 #### Role Permissions:
 
-|   ⚙️ Permission    |
+|   ⚙️ Permissions   |
 |:------------------:|
 |     EmbedLinks     |
 | ReadMessageHistory |
@@ -71,14 +71,12 @@
 
 ##### From `@postfmly/logoserver`:
 
-|  📝 Description   | 📌 Variable |    {...} Value    |
-|:-----------------:|:-----------:|:-----------------:|
-|     IPv4/IPv6     |  LOGO_IPv6  |  true/**false**   |
-|     Logo Name     |  LOGO_NAME  |   soberbot.webp   |
-|    Local Path     |  LOGO_PATH  |  ./utils/images   |
-|       Port        |  LOGO_PORT  | **Random**/[port] |
-|    Logo 2 Name    | LOGO2_NAME  |    [filename]     |
-| Logo 2 Local Path | LOGO2_PATH  |      [path]       |
+| 📝 Description | 📌 Variable |    {...} Value    |
+|:--------------:|:-----------:|:-----------------:|
+|   IPv4/IPv6    |  LOGO_IPv6  |  true/**false**   |
+|   Logo Name    |  LOGO_NAME  |   soberbot.webp   |
+|   Local Path   |  LOGO_PATH  |  ./utils/images   |
+|      Port      |  LOGO_PORT  | **Random**/[port] |
 
 ##### From `@postfmly/checkrate`:
 
