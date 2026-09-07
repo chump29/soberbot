@@ -20,7 +20,6 @@ interface ICommandFile {
 }
 
 const loadCommands = async (client: Client): Promise<void> => {
-  console.error(import.meta.dirname)
   const interactionCreate: IInteractionCreate = await import(`${import.meta.dirname}/${Events.InteractionCreate}.ts`)
   client.on(Events.InteractionCreate, async (interaction: Interaction): Promise<void> => {
     await interactionCreate.invoke(interaction as ChatInputCommandInteraction)
