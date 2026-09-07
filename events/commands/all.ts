@@ -20,7 +20,7 @@ const { COLOR, NAME }: IEnv = env
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(Bun.env.file).name)
+    .setName(parse(import.meta.filename).name)
     .setDescription("List all streaks")
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .setContexts(InteractionContextType.Guild)

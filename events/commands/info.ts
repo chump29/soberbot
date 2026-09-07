@@ -21,7 +21,7 @@ const { LOGO_URL, NAME, COLOR }: IEnv = env
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(Bun.env.file).name)
+    .setName(parse(import.meta.filename).name)
     .setDescription(`Information about ${NAME}`)
     .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
     .setContexts(InteractionContextType.Guild)

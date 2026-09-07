@@ -17,7 +17,7 @@ import { DB } from "../../utils/db.ts"
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(Bun.env.file).name)
+    .setName(parse(import.meta.filename).name)
     .setDescription("Reset substance date")
     .addStringOption(
       (option: SlashCommandStringOption): SlashCommandStringOption =>

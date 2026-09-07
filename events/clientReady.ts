@@ -16,14 +16,14 @@ const invoke = async (client: Client): Promise<void> => {
     throw new Error("Invalid client")
   }
 
-  const commands: string[] = await readdir(`${Bun.env.dir}/commands`).then((dir: string[]): string[] =>
+  const commands: string[] = await readdir(`${import.meta.dirname}/commands`).then((dir: string[]): string[] =>
     dir.filter((file: string): boolean => file.endsWith(".ts"))
   )
 
   const commandsArray: RESTPostAPIChatInputApplicationCommandsJSONBody[] = []
   await Promise.all(
     commands.map(async (command: string): Promise<void> => {
-      const commandFile: ICommandFile = await import(`${Bun.env.dir}/commands/${command}`)
+      const commandFile: ICommandFile = await import(`${import.meta.dirname}/commands/${command}`)
       commandsArray.push(await commandFile.create())
 
       if (DEBUG) {
