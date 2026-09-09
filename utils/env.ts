@@ -1,4 +1,3 @@
-import { fakerEN_US as fake } from "@faker-js/faker"
 import { bool, cleanEnv, type ExactValidator, makeExactValidator, url } from "envalid"
 import {
   hexColor,
@@ -22,10 +21,6 @@ const ID_LEN: number = 19
 const MIN_PORT: number = 1024
 const MAX_PORT: number = 65_535
 
-const TOKEN_ID: number = 26
-const TOKEN_EPOCH: number = 6
-const TOKEN_HMAC: number = 38
-
 const StringSchema = pipe(string(), trim(), nonEmpty())
 const IdSchema = pipe(StringSchema, maxLength(ID_LEN), regex(/^\d+$/))
 const ColorSchema = pipe(StringSchema, hexColor())
@@ -45,8 +40,14 @@ const portValidator: ExactValidator<"random" | number> = makeExactValidator<"ran
 )
 const tokenValidator: ExactValidator<string> = makeExactValidator<string>((s: string): string => parse(TokenSchema, s))
 
+const getRandomString = (): string => {
+  const Base36: number = 36
+
+  return Math.random().toString(Base36).slice(2)
+}
+
 const env = cleanEnv(Bun.env, {
-  CHANNEL_ID: idValidator({ testDefault: fake.string.numeric({ allowLeadingZeros: false, length: ID_LEN }) }),
+  CHANNEL_ID: idValidator({ testDefault: getRandomString() }),
   COLOR: colorValidator({ default: "#78866b" }),
   DB_NAME: stringValidator({ default: "soberbot.db", testDefault: "soberbot.test.db" }),
   DB_PATH: stringValidator({ default: "./db" }),
@@ -54,11 +55,9 @@ const env = cleanEnv(Bun.env, {
   LOGO_NAME: stringValidator({ default: "soberbot.webp" }),
   LOGO_PATH: stringValidator({ default: "./utils/images" }),
   LOGO_PORT: portValidator({ default: "random" }),
-  LOGO_URL: url({ testDefault: fake.image.url() }),
+  LOGO_URL: url({ testDefault: "my.url" }),
   NAME: stringValidator({ default: "SoberBot" }),
-  TOKEN: tokenValidator({
-    testDefault: `${fake.string.alphanumeric(TOKEN_ID)}.${fake.string.alphanumeric(TOKEN_EPOCH)}.${fake.string.alphanumeric(TOKEN_HMAC)}`
-  })
+  TOKEN: tokenValidator({ testDefault: getRandomString() })
 })
 
 export { env }
