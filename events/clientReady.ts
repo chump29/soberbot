@@ -8,7 +8,7 @@ import { type Client, type RESTPostAPIChatInputApplicationCommandsJSONBody } fro
 import { env } from "../utils/env.ts"
 import { type ICommandFile } from "./loadCommands.ts"
 
-const { DEBUG }: typeof env = env
+const { DEBUG } = env as typeof env
 
 const invoke = async (client: Client): Promise<void> => {
   if (!(client.application && client.user)) {

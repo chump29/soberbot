@@ -4,19 +4,8 @@ import { expectTypeOf } from "expect-type"
 
 import { env } from "../utils/env.ts"
 
-const {
-  CHANNEL_ID,
-  COLOR,
-  DB_NAME,
-  DB_PATH,
-  DEBUG,
-  LOGO_NAME,
-  LOGO_PATH,
-  LOGO_PORT,
-  LOGO_URL,
-  NAME,
-  TOKEN
-}: typeof env = env
+const { CHANNEL_ID, COLOR, DB_NAME, DB_PATH, DEBUG, LOGO_NAME, LOGO_PATH, LOGO_PORT, LOGO_URL, NAME, TOKEN } =
+  env as typeof env
 
 describe("env", (): void => {
   test("CHANNEL_ID", (): void => {

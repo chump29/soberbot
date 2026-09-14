@@ -13,10 +13,10 @@ import {
   SlashCommandBuilder
 } from "discord.js"
 
-import { version } from "../../package.json" with { type: "json" }
+import { author, version } from "../../package.json" with { type: "json" }
 import { env } from "../../utils/env.ts"
 
-const { LOGO_URL, NAME, COLOR }: typeof env = env
+const { LOGO_URL, NAME, COLOR } = env as typeof env
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
@@ -43,7 +43,7 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
         .setThumbnail(LOGO_URL)
         .setDescription("- Handles sober dates")
         .setFooter({
-          text: "By Chris Post"
+          text: `By ${author.name}`
         })
     ]
   })

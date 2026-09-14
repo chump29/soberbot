@@ -15,7 +15,7 @@ import {
 import { DB, type IData, type ISubstanceData } from "../../utils/db.ts"
 import { env } from "../../utils/env.ts"
 
-const { COLOR, NAME }: typeof env = env
+const { COLOR, NAME } = env as typeof env
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
