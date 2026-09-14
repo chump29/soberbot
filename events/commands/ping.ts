@@ -12,9 +12,8 @@ import {
 } from "discord.js"
 
 import { env } from "../../utils/env.ts"
-import { type IEnv } from "../../utils/IEnv.ts"
 
-const { NAME }: IEnv = env
+const { NAME }: typeof env = env
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()

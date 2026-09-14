@@ -3,9 +3,20 @@ import { describe, expect, test } from "bun:test"
 import { expectTypeOf } from "expect-type"
 
 import { env } from "../utils/env.ts"
-import { type IEnv } from "../utils/IEnv.ts"
 
-const { CHANNEL_ID, COLOR, DB_NAME, DB_PATH, DEBUG, LOGO_NAME, LOGO_PATH, LOGO_PORT, LOGO_URL, NAME, TOKEN }: IEnv = env
+const {
+  CHANNEL_ID,
+  COLOR,
+  DB_NAME,
+  DB_PATH,
+  DEBUG,
+  LOGO_NAME,
+  LOGO_PATH,
+  LOGO_PORT,
+  LOGO_URL,
+  NAME,
+  TOKEN
+}: typeof env = env
 
 describe("env", (): void => {
   test("CHANNEL_ID", (): void => {

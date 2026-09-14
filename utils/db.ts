@@ -23,11 +23,10 @@ import {
   users
 } from "../db/schema.ts"
 import { env } from "./env.ts"
-import { type IEnv } from "./IEnv.ts"
 
 dayjs.extend(duration)
 
-const { DB_NAME, DB_PATH, DEBUG }: IEnv = env
+const { DB_NAME, DB_PATH, DEBUG }: typeof env = env
 
 interface ISubstanceData {
   date: string

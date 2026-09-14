@@ -6,10 +6,9 @@ import { info } from "@postfmly/logger"
 import { type Client, type RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js"
 
 import { env } from "../utils/env.ts"
-import { type IEnv } from "../utils/IEnv.ts"
 import { type ICommandFile } from "./loadCommands.ts"
 
-const { DEBUG }: IEnv = env
+const { DEBUG }: typeof env = env
 
 const invoke = async (client: Client): Promise<void> => {
   if (!(client.application && client.user)) {

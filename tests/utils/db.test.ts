@@ -9,7 +9,6 @@ import { titleCase } from "title-case"
 
 import { DATE_FORMAT, type ISubstance, type IUser, MAX_USER_ID_LEN, substances, users } from "../../db/schema.ts"
 import { DB, type IData } from "../../utils/db.ts"
-import { SUBSTANCES } from "../substances.ts"
 
 const LEN: number = 2
 
@@ -19,7 +18,7 @@ let name: string = ""
 const getName = (): string => {
   let tmp: string = ""
   do {
-    tmp = fake.helpers.arrayElement(SUBSTANCES)
+    tmp = fake.lorem.word()
   } while (tmp === name)
   if (name.length === 0) {
     name = tmp
@@ -121,7 +120,7 @@ describe("db", (): void => {
 
     expect(sub.date).not.toBe(today)
 
-    expect(msg).toContain(sub.name)
+    expect(msg).toContain(titleCase(sub.name))
 
     sub = await getSubstance()
 
