@@ -4,7 +4,7 @@
 
 FROM oven/bun:alpine AS build
 
-# hadolint ignore=DL3018
+# hadolint ignore=DL3016,DL3018
 RUN apk add --no-cache \
   build-base \
   g++ \
@@ -13,7 +13,8 @@ RUN apk add --no-cache \
   pixman-dev \
   python3 \
   nodejs \
-  npm
+  npm \
+  && npm install node-gyp
 
 WORKDIR /app
 
@@ -21,8 +22,6 @@ ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
 
 COPY package.json bun.lock ./
 COPY patches/ ./patches/
-
-RUN bun config set node-gyp "npx node-gyp"
 
 RUN --mount=type=cache,target=/.bun-cache \
   bun install --frozen-lockfile --production
