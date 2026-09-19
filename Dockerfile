@@ -16,7 +16,7 @@ RUN apk add --no-cache \
   python3 \
   nodejs \
   npm && \
-  npm install -g node-gpy
+  npm install -g node-gyp
 
 COPY . .
 
