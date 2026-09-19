@@ -36,7 +36,8 @@ LABEL org.opencontainers.image.authors="Chris Post <admin@postfmly.com>" \
 ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
 ENV TZ=Etc/GMT
 
-COPY package.json bun.lock patches/ ./
+COPY package.json bun.lock ./
+COPY patches/ ./patches/
 
 RUN --mount=type=cache,target=/.bun-cache \
   bun install --frozen-lockfile --production
