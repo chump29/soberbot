@@ -17,7 +17,6 @@ import {
   SlashCommandBuilder,
   type SlashCommandStringOption
 } from "discord.js"
-import { fillTextWithTwemoji } from "node-canvas-with-twemoji-and-discord-emoji"
 import { default as ShortUniqueId } from "short-unique-id"
 
 import { MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
@@ -43,7 +42,7 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
 const fontName: string = "Sniglet"
 registerFont(`./utils/images/${fontName}.ttf`, { family: fontName })
 const fontSize: number = 16
-const fontStyle: string = `bold ${fontSize}px ${fontName}`
+const fontStyle: string = `${fontSize}px ${fontName}`
 
 const padding: number = 5
 
@@ -61,7 +60,7 @@ const iconWidth: number = tmp.measureText(icon).width
 
 const whiteOrBlack = (color: string): string => (new TinyColor(color).isLight() ? "black" : "white")
 
-const createImage = async (txt: string[]): Promise<AttachmentBuilder> => {
+const createImage = (txt: string[]): AttachmentBuilder => {
   const w: number = Math.max(
     ...txt.map((t: string): number => iconWidth + tmp.measureText(t).width + wOffset * 2 + padding)
   )
@@ -79,14 +78,18 @@ const createImage = async (txt: string[]): Promise<AttachmentBuilder> => {
 
   const txtColor: string = whiteOrBlack(bgColor)
 
-  ctx.fillStyle = mostReadable(bgColor, ["red", "yellow"])?.toHexString() ?? txtColor
-  await fillTextWithTwemoji(ctx, icon, wOffset, h / 2)
-
   ctx.font = fontStyle
   ctx.textBaseline = "middle"
+
+  ctx.fillStyle = mostReadable(bgColor, ["red", "yellow"])?.toHexString() ?? txtColor
+  ctx.fillText(icon, wOffset, h / 2)
+
   ctx.fillStyle = txtColor
   for (let i = 0; i < txt.length; i++) {
-    const y = i * rowH + rowH / 2 + (i === 0 ? wOffset : -wOffset)
+    let y = i * rowH + rowH / 2
+    if (txt.length > 1) {
+      y += i === 0 ? padding : -padding
+    }
     ctx.fillText(txt[i] as string, iconWidth + wOffset, y)
   }
 
@@ -120,7 +123,7 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
       if (isError) {
         reply.content = `-# > ${msg[0]}`
       } else {
-        reply.files = [await createImage(msg)]
+        reply.files = [createImage(msg)]
       }
 
       await interaction.reply(reply)
