@@ -1,33 +1,29 @@
-# cSpell: ignore pango,pixman (sniglet)
+# cSpell: ignore pango,pixman,noto,fontconfig
 
 #!/usr/bin/env -S docker image build . --tag soberbot --file
 
 FROM oven/bun:alpine AS build
 
-WORKDIR /app
-
 # hadolint ignore=DL3016,DL3018
 RUN apk add --no-cache \
+  # * canvas build
   build-base \
   g++ \
   cairo-dev \
   pango-dev \
   pixman-dev \
   python3 \
-  nodejs \
-  npm && \
-  npm install -g node-gyp
-
-COPY . .
-
-ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
-
-RUN --mount=type=cache,target=/.bun-cache \
-  bun install --frozen-lockfile --production
-
-# -=-
-
-FROM oven/bun:alpine
+  # * app runtime
+  tzdata \
+  # * util
+  sqlite \
+  # * canvas runtime
+  cairo \
+  pango \
+  pixman \
+  font-noto-emoji \
+  fontconfig \
+  && fc-cache -f -v
 
 WORKDIR /app
 
@@ -37,17 +33,15 @@ LABEL org.opencontainers.image.authors="Chris Post <admin@postfmly.com>" \
   org.opencontainers.image.title="SoberBot" \
   org.opencontainers.image.url="https://github.com/chump29/soberbot"
 
-# hadolint ignore=DL3018
-RUN apk add --no-cache \
-  tzdata \
-  sqlite \
-  cairo \
-  pango \
-  pixman
-
-COPY --from=build /app /app/
-
+ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
 ENV TZ=Etc/GMT
+
+COPY package.json bun.lock ./
+
+RUN --mount=type=cache,target=/.bun-cache \
+  bun install --frozen-lockfile --production
+
+COPY . .
 
 HEALTHCHECK --interval=60s CMD source healthcheck.sh
 
