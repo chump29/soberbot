@@ -41,7 +41,7 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
     .toJSON()
 
 const fontName: string = "Sniglet"
-registerFont(`../../utils/images/${fontName}.ttf`, { family: fontName })
+registerFont(`./utils/images/${fontName}.ttf`, { family: fontName })
 const fontSize: number = 16
 const fontStyle: string = `bold ${fontSize}px ${fontName}`
 
