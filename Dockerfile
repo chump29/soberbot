@@ -1,5 +1,3 @@
-# cSpell: ignore pango,pixman,noto,fontconfig
-
 #!/usr/bin/env -S docker image build . --tag soberbot --file
 
 FROM oven/bun:alpine AS build

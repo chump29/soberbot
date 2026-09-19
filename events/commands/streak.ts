@@ -1,5 +1,3 @@
-// cSpell: ignore sniglet
-
 import { parse } from "node:path"
 
 import { checkRate } from "@postfmly/checkrate"

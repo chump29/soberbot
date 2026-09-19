@@ -6,7 +6,7 @@ import { type Nullable } from "@postfmly/types"
 import { default as pluralize } from "@jarrodek/pluralize"
 import { default as dayjs } from "dayjs"
 import { default as duration } from "dayjs/plugin/duration"
-import { and, eq, sql } from "drizzle-orm"
+import { and, desc, eq, sql } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/bun-sqlite"
 import { migrate } from "drizzle-orm/bun-sqlite/migrator"
 import { titleCase } from "title-case"
@@ -255,6 +255,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
           .select({ date: substances.date, name: substances.name })
           .from(substances)
           .where(eq(substances.userId, userId))
+          .orderBy(desc(substances.date))
 
         if (allSubstances.length === 0) {
           return ["❌ Streak(s) not found"]
