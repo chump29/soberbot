@@ -6,17 +6,21 @@ FROM oven/bun:alpine AS build
 
 WORKDIR /app
 
-COPY . .
-
-ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
-
-# hadolint ignore=DL3018
+# hadolint ignore=DL3016,DL3018
 RUN apk add --no-cache \
   build-base \
   g++ \
   cairo-dev \
   pango-dev \
-  pixman-dev
+  pixman-dev \
+  python3 \
+  nodejs \
+  npm && \
+  npm install -g node-gpy
+
+COPY . .
+
+ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
 
 RUN --mount=type=cache,target=/.bun-cache \
   bun install --frozen-lockfile --production
