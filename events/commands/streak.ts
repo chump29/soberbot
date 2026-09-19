@@ -1,9 +1,11 @@
+// cSpell: ignore sniglet
+
 import { parse } from "node:path"
 
 import { checkRate } from "@postfmly/checkrate"
 
 import { mostReadable, random as randomColor, TinyColor } from "@ctrl/tinycolor"
-import { Canvas, type CanvasRenderingContext2D } from "canvas"
+import { Canvas, type CanvasRenderingContext2D, registerFont } from "canvas"
 import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
@@ -38,8 +40,10 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
     .setContexts(InteractionContextType.Guild)
     .toJSON()
 
+const fontName: string = "Sniglet"
+registerFont(`../../utils/images/${fontName}.ttf`, { family: fontName })
 const fontSize: number = 16
-const fontStyle: string = `bold ${fontSize}px sans-serif`
+const fontStyle: string = `bold ${fontSize}px ${fontName}`
 
 const padding: number = 5
 
@@ -73,14 +77,13 @@ const createImage = async (txt: string[]): Promise<AttachmentBuilder> => {
   ctx.roundRect(0, 0, w, h, radius)
   ctx.fill()
 
-  ctx.font = fontStyle
-  ctx.textBaseline = "middle"
-
   const txtColor: string = whiteOrBlack(bgColor)
 
   ctx.fillStyle = mostReadable(bgColor, ["red", "yellow"])?.toHexString() ?? txtColor
   await fillTextWithTwemoji(ctx, icon, wOffset, h / 2)
 
+  ctx.font = fontStyle
+  ctx.textBaseline = "middle"
   ctx.fillStyle = txtColor
   for (let i = 0; i < txt.length; i++) {
     const y = i * rowH + rowH / 2 + (i === 0 ? wOffset : -wOffset)
