@@ -47,15 +47,13 @@ const getFields = (data: IData[]): APIEmbedField[] => {
 }
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
   await DB.getAll().then(async (msg: IData[] | string): Promise<void> => {
     if (typeof msg === "string") {
-      await interaction.reply({
-        content: `-# > ❌ ${msg as string}`,
-        flags: MessageFlags.Ephemeral
-      })
+      await interaction.editReply({ content: `-# > ${msg as string}` })
     } else {
-      await interaction.reply({
-        flags: MessageFlags.Ephemeral,
+      await interaction.editReply({
         embeds: [
           new EmbedBuilder()
             .setColor(COLOR as HexColorString)

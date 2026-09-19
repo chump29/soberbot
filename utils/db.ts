@@ -45,7 +45,7 @@ interface ISoberBotDatabase {
   close: () => void
   deleteDate: (userId: string, name: string) => Promise<string>
   getAll: () => Promise<IData[] | string>
-  getDate: (userId: string, name: string) => Promise<string>
+  getDate: (userId: string, name: string) => Promise<string[]>
   getList: (userId: string) => Promise<IData | string>
   open: () => void
   resetDate: (userId: string, name: string) => Promise<string>
@@ -245,8 +245,10 @@ class SoberBotDatabase implements ISoberBotDatabase {
     return pluralize("day", days, true)
   }
 
+  static format = (name: string, date: string): string => `${name}: ${SoberBotDatabase.getStreak(date)}`
+
   // * /streak <name|all>
-  async getDate(userId: string, name: string): Promise<string> {
+  async getDate(userId: string, name: string): Promise<string[]> {
     if (name.toLowerCase() === "all") {
       try {
         const allSubstances: Partial<ISubstance>[] = await this.dbCheck()
@@ -255,18 +257,16 @@ class SoberBotDatabase implements ISoberBotDatabase {
           .where(eq(substances.userId, userId))
 
         if (allSubstances.length === 0) {
-          return "❌ Streak(s) not found"
+          return ["❌ Streak(s) not found"]
         }
 
-        return allSubstances
-          .map(
-            (s: Partial<ISubstance>): string => `-# 🔥 ${s.name}: **${SoberBotDatabase.getStreak(s.date as string)}**`
-          )
-          .join("\n")
+        return allSubstances.map((s: Partial<ISubstance>): string =>
+          SoberBotDatabase.format(s.name as string, s.date as string)
+        )
       } catch (e: unknown) {
         const msg: string = "❌ Could not get all streaks"
         error(msg, e)
-        return msg
+        return [msg]
       }
     }
 
@@ -280,14 +280,14 @@ class SoberBotDatabase implements ISoberBotDatabase {
         .limit(1)
 
       if (!substance) {
-        return `❌ Streak not found for ${titleName}`
+        return [`❌ Streak not found for ${titleName}`]
       }
 
-      return `-# 🔥 ${substance.name}: **${SoberBotDatabase.getStreak(substance.date as string)}**`
+      return [SoberBotDatabase.format(substance.name as string, substance.date as string)]
     } catch (e: unknown) {
       const msg: string = `❌ Could not get date for ${titleName}`
       error(msg, titleName, e)
-      return msg
+      return [msg]
     }
   }
 

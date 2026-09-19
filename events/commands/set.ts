@@ -64,15 +64,14 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
   const date: dayjs.Dayjs = dayjs(
     `${interaction.options.getInteger("year")}-${interaction.options.getInteger("month")}-${interaction.options.getInteger("day")}`
   )
 
   if (date.isAfter(dayjs())) {
-    await interaction.reply({
-      content: `-# > ❌ Date must be before or equal to ${dayjs().format(DATE_FORMAT)}`,
-      flags: MessageFlags.Ephemeral
-    })
+    await interaction.editReply({ content: `-# > ❌ Date must be before or equal to ${dayjs().format(DATE_FORMAT)}` })
 
     return
   }
@@ -81,12 +80,9 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     interaction.user.id,
     interaction.user.displayName,
     date.format(DATE_FORMAT),
-    interaction.options.getString("name") as string
+    (interaction.options.getString("name") as string).trim()
   ).then(async (msg: string): Promise<void> => {
-    await interaction.reply({
-      content: `-# > ${msg}`,
-      flags: MessageFlags.Ephemeral
-    })
+    await interaction.editReply({ content: `-# > ${msg}` })
   })
 }
 

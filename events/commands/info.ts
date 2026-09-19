@@ -31,8 +31,9 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  await interaction.reply({
-    flags: MessageFlags.Ephemeral,
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
+  await interaction.editReply({
     embeds: [
       new EmbedBuilder()
         .setColor(COLOR as HexColorString)

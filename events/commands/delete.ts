@@ -37,12 +37,11 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  await DB.deleteDate(interaction.user.id, interaction.options.getString("name") as string).then(
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
+  await DB.deleteDate(interaction.user.id, (interaction.options.getString("name") as string).trim()).then(
     async (msg: string): Promise<void> => {
-      await interaction.reply({
-        content: `-# > ${msg}`,
-        flags: MessageFlags.Ephemeral
-      })
+      await interaction.editReply({ content: `-# > ${msg}` })
     }
   )
 }

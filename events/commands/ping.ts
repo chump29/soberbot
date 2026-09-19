@@ -28,9 +28,10 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  await interaction.reply({
-    content: `-# > **Pong!** ⚡ Your latency is: \`${Date.now() - interaction.createdTimestamp}ms\``,
-    flags: MessageFlags.Ephemeral
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
+  await interaction.editReply({
+    content: `-# > **Pong!** ⚡ Your latency is: \`${Date.now() - interaction.createdTimestamp}ms\``
   })
 }
 

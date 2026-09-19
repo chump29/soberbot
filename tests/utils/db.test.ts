@@ -77,16 +77,17 @@ describe("db", (): void => {
   })
 
   test("getDate - name", async (): Promise<void> => {
-    const msg: string = await DB.getDate(userId, name)
+    const msg: string[] = await DB.getDate(userId, name)
 
-    expect(msg).toContain(name)
+    expect(msg).toHaveLength(1)
+    expect(msg[0]).toContain(name)
   })
 
   test("getDate - all", async (): Promise<void> => {
-    const msg: string = await DB.getDate(userId, "all")
+    const msg: string[] = await DB.getDate(userId, "all")
 
-    expect(msg).toContain(name)
-    expect(msg).toContain("\n")
+    expect(msg).toHaveLength(LEN)
+    expect(msg).toEqual(expect.arrayContaining([expect.stringContaining(name)]))
   })
 
   test("setData", async (): Promise<void> => {
