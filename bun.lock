@@ -22,7 +22,7 @@
       },
       "devDependencies": {
         "@faker-js/faker": "^10.6.0",
-        "@postfmly/config": "^1.4.70",
+        "@postfmly/config": "^1.4.71",
         "drizzle-kit": "1.0.0-rc.4",
         "expect-type": "^1.4.0",
         "husky": "^9.1.7",
@@ -31,6 +31,9 @@
       },
     },
   },
+  "trustedDependencies": [
+    "canvas",
+  ],
   "patchedDependencies": {
     "@jarrodek/pluralize@1.0.2": "patches/@jarrodek%2Fpluralize@1.0.2.patch",
   },
@@ -285,7 +288,7 @@
 
     "@postfmly/checkrate": ["@postfmly/checkrate@1.0.12", "https://npm.postfmly.com/@postfmly/checkrate/-/checkrate-1.0.12.tgz", { "dependencies": { "discord.js-rate-limiter": "^1.3.2", "ms": "^2.1.3" }, "peerDependencies": { "@postfmly/config": "^1.4.44", "@postfmly/logger": "^1.0.25", "discord.js": "^14.27.0" } }, "sha512-wDtlqscg6KUmD20U+0tD97AYYPnQc0GSQF5Ae1xNEeO6We6PdFBCW3DrQy+3j+KVOIUyUIaueivCJVlJ2bseag=="],
 
-    "@postfmly/config": ["@postfmly/config@1.4.70", "https://npm.postfmly.com/@postfmly/config/-/config-1.4.70.tgz", { "peerDependencies": { "@biomejs/biome": "^2.5.14", "@types/bun": "^1.4.2", "@types/node": "^26.6.2", "cspell": "^10.3.3", "cve-lite-cli": "^1.35.0", "globals": "^17.12.0", "typescript": "^7.0.2" }, "bin": { "link-configs": "bin/link-configs" } }, "sha512-RzxL5RDFE7HjK3Vaz7FcBjsiE/G+NONsFFFOO0c3EBm1PCkn8xqa83oiSiV3jlP/gMA5DQ5Hb44beXHKnZRJWg=="],
+    "@postfmly/config": ["@postfmly/config@1.4.71", "https://npm.postfmly.com/@postfmly/config/-/config-1.4.71.tgz", { "peerDependencies": { "@biomejs/biome": "^2.5.14", "@types/bun": "^1.4.2", "@types/node": "^26.6.2", "cspell": "^10.3.3", "cve-lite-cli": "^1.35.0", "globals": "^17.12.0", "typescript": "^7.0.2" }, "bin": { "link-configs": "bin/link-configs" } }, "sha512-5wdH+Ue+nymnsVsya4T2KKqepLZy9VU4uiMIJktQZ4yXUTurS0xwXs5WRlLTb1lU3N4Wrzy/tm4gbyTlITCxgg=="],
 
     "@postfmly/logger": ["@postfmly/logger@1.0.30", "https://npm.postfmly.com/@postfmly/logger/-/logger-1.0.30.tgz", { "dependencies": { "browser-or-node": "^3.0.0", "dayjs": "^1.11.23", "picocolors": "^1.1.1" }, "peerDependencies": { "@postfmly/config": "^1.4.54" } }, "sha512-/UzM2YQvbfSIFs0ypD3Txo7zo4OcSvfIzhiJ1Xrw6DvpC8hoSnNbdI2UPT/Fx3SK/LuV7D5xJITjlNb6FM0x7Q=="],
 

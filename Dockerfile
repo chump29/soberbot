@@ -1,3 +1,5 @@
+# cSpell: ignore pango,pixman (sniglet)
+
 #!/usr/bin/env -S docker image build . --tag soberbot --file
 
 FROM oven/bun:alpine AS build
@@ -7,6 +9,14 @@ WORKDIR /app
 COPY . .
 
 ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
+
+# hadolint ignore=DL3018
+RUN apk add --no-cache \
+  build-base \
+  g++ \
+  cairo-dev \
+  pango-dev \
+  pixman-dev
 
 RUN --mount=type=cache,target=/.bun-cache \
   bun install --frozen-lockfile --ignore-scripts --production
@@ -24,7 +34,12 @@ LABEL org.opencontainers.image.authors="Chris Post <admin@postfmly.com>" \
   org.opencontainers.image.url="https://github.com/chump29/soberbot"
 
 # hadolint ignore=DL3018
-RUN apk add --no-cache tzdata sqlite
+RUN apk add --no-cache \
+  tzdata \
+  sqlite \
+  cairo \
+  pango \
+  pixman
 
 COPY --from=build /app /app/
 

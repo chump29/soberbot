@@ -3,7 +3,7 @@ import { parse } from "node:path"
 import { checkRate } from "@postfmly/checkrate"
 
 import { mostReadable, random as randomColor, TinyColor } from "@ctrl/tinycolor"
-import { Canvas, type CanvasRenderingContext2D, registerFont } from "canvas"
+import { Canvas, type CanvasRenderingContext2D } from "canvas"
 import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
@@ -37,14 +37,14 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
     .setContexts(InteractionContextType.Guild)
     .toJSON()
 
-const fontName: string = "Sniglet"
-registerFont(`utils/images/${fontName}.ttf`, { family: fontName })
 const fontSize: number = 16
-const fontStyle: string = `${fontSize}px ${fontName}`
+const fontStyle: string = `bold ${fontSize}px sans-serif`
 
 const padding: number = 5
 
 const wOffset: number = padding * 2
+
+const rowH: number = fontSize + padding * 2
 
 const radius: number = 20
 
@@ -57,9 +57,11 @@ const iconWidth: number = tmp.measureText(icon).width
 const whiteOrBlack = (color: string): string => (new TinyColor(color).isLight() ? "black" : "white")
 
 const createImage = (txt: string[]): AttachmentBuilder => {
-  const w: number = Math.max(...txt.map((t: string): number => iconWidth + tmp.measureText(t).width + wOffset * 2))
+  const w: number = Math.max(
+    ...txt.map((t: string): number => iconWidth + tmp.measureText(t).width + wOffset * 2 + padding)
+  )
 
-  const h: number = (fontSize + padding * 2) * txt.length
+  const h: number = rowH * txt.length
 
   const img: Canvas = new Canvas(w, h)
   const ctx: CanvasRenderingContext2D = img.getContext("2d")
@@ -79,7 +81,10 @@ const createImage = (txt: string[]): AttachmentBuilder => {
   ctx.fillText(icon, wOffset, h / 2)
 
   ctx.fillStyle = txtColor
-  ctx.fillText(txt.join("\n"), iconWidth + wOffset, txt.length === 1 ? h / 2 : padding * (txt.length + 1))
+  for (let i = 0; i < txt.length; i++) {
+    const y = i * rowH + rowH / 2 + (i === 0 ? wOffset : -wOffset)
+    ctx.fillText(txt[i] as string, iconWidth + wOffset, y)
+  }
 
   return new AttachmentBuilder(img.toBuffer("image/png"), {
     name: `soberbot_streak_${new ShortUniqueId({ length: 11 }).rnd()}.png`

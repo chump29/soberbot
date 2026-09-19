@@ -51,15 +51,15 @@
   },
   "overrides": {
     "@biomejs/biome": "2.5.14",
+    "@discordjs/collection": "2.1.1",
     "@types/bun": "1.4.2",
     "@types/node": "26.6.2",
+    "chalk": "6.0.0",
     "cspell": "10.3.3",
     "cve-lite-cli": "1.35.0",
     "globals": "17.12.0",
-    "typescript": "7.0.2",
-    "@discordjs/collection": "2.1.1",
-    "chalk": "6.0.0",
-    "ini": "7.0.0"
+    "ini": "7.0.0",
+    "typescript": "7.0.2"
   },
   "dependencies": {
     "@ctrl/tinycolor": "^4.2.1",
@@ -79,7 +79,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@postfmly/config": "^1.4.70",
+    "@postfmly/config": "^1.4.71",
     "drizzle-kit": "1.0.0-rc.4",
     "expect-type": "^1.4.0",
     "husky": "^9.1.7",
@@ -93,5 +93,8 @@
   "engineStrict": true,
   "patchedDependencies": {
     "@jarrodek/pluralize@1.0.2": "patches/@jarrodek%2Fpluralize@1.0.2.patch"
-  }
+  },
+  "trustedDependencies": [
+    "canvas"
+  ]
 }
