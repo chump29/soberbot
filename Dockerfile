@@ -19,7 +19,7 @@ RUN apk add --no-cache \
   pixman-dev
 
 RUN --mount=type=cache,target=/.bun-cache \
-  bun install --frozen-lockfile --ignore-scripts --production
+  bun install --frozen-lockfile --production
 
 # -=-
 
