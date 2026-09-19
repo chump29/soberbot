@@ -34,7 +34,7 @@
     "lint:env": "bun run --bun dotenv-linter check .",
     "lint:spell": "bun run --bun cspell --dot --verbose .",
     "lint:ts": "bun run --bun tsc",
-    "prepare": "husky",
+    "prepare": "husky || :",
     "prod": "bun run index.ts",
     "scan": "bun audit && bun run --bun cve-lite --check-overrides",
     "scan:e18e": "bunx --bun @e18e/cli analyze",
