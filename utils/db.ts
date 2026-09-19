@@ -6,7 +6,7 @@ import { type Nullable } from "@postfmly/types"
 import { default as pluralize } from "@jarrodek/pluralize"
 import { default as dayjs } from "dayjs"
 import { default as duration } from "dayjs/plugin/duration"
-import { and, desc, eq, sql } from "drizzle-orm"
+import { and, eq, sql } from "drizzle-orm"
 import { drizzle } from "drizzle-orm/bun-sqlite"
 import { migrate } from "drizzle-orm/bun-sqlite/migrator"
 import { titleCase } from "title-case"
@@ -255,7 +255,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
           .select({ date: substances.date, name: substances.name })
           .from(substances)
           .where(eq(substances.userId, userId))
-          .orderBy(desc(substances.date))
+          .orderBy(substances.date)
 
         if (allSubstances.length === 0) {
           return ["❌ Streak(s) not found"]
@@ -304,7 +304,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
           },
           with: {
             substances: {
-              orderBy: { date: "desc" },
+              orderBy: { name: "asc" },
               columns: {
                 date: true,
                 name: true
@@ -342,7 +342,6 @@ class SoberBotDatabase implements ISoberBotDatabase {
       const data: Nullable<IData> =
         // @ts-expect-error: undefined
         (await this.dbCheck().query.users.findFirst({
-          orderBy: { userName: "asc" },
           columns: {
             userId: true,
             userName: true
@@ -353,7 +352,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
           },
           with: {
             substances: {
-              orderBy: { date: "desc" },
+              orderBy: { name: "asc" },
               columns: {
                 date: true,
                 name: true
