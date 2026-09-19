@@ -4,29 +4,43 @@
 
 FROM oven/bun:alpine AS build
 
-# hadolint ignore=DL3016,DL3018
+# hadolint ignore=DL3018
 RUN apk add --no-cache \
-  # * canvas build
   build-base \
   g++ \
   cairo-dev \
   pango-dev \
   pixman-dev \
   python3 \
-  # * app runtime
+  nodejs \
+  npm
+
+WORKDIR /app
+
+ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
+
+COPY package.json bun.lock ./
+COPY patches/ ./patches/
+
+RUN bun config set node-gyp "npx node-gyp"
+
+RUN --mount=type=cache,target=/.bun-cache \
+  bun install --frozen-lockfile --production
+
+# -=-
+
+FROM oven/bun:alpine
+
+# hadolint ignore=DL3018
+RUN apk add --no-cache \
   tzdata \
-  # * util
   sqlite \
-  # * canvas runtime
   cairo \
   pango \
   pixman \
-  # * canvas emoji
   font-noto-emoji \
   fontconfig \
-  && fc-cache -f -v \
-  # * canvas node-gyp
-  && ln -sf /usr/bin/python3 /usr/bin/python
+  && fc-cache -f -v
 
 WORKDIR /app
 
@@ -36,14 +50,10 @@ LABEL org.opencontainers.image.authors="Chris Post <admin@postfmly.com>" \
   org.opencontainers.image.title="SoberBot" \
   org.opencontainers.image.url="https://github.com/chump29/soberbot"
 
-ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
 ENV TZ=Etc/GMT
 
-COPY package.json bun.lock ./
-COPY patches/ ./patches/
-
-RUN --mount=type=cache,target=/.bun-cache \
-  bun install --frozen-lockfile --production
+COPY --from=build /app/node_modules ./node_modules
+COPY package.json ./
 
 COPY . .
 
