@@ -21,9 +21,12 @@ RUN apk add --no-cache \
   cairo \
   pango \
   pixman \
+  # * canvas emoji
   font-noto-emoji \
   fontconfig \
-  && fc-cache -f -v
+  && fc-cache -f -v \
+  # * canvas node-gyp
+  && ln -sf /usr/bin/python3 /usr/bin/python
 
 WORKDIR /app
 
