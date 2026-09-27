@@ -53,10 +53,10 @@
     "@biomejs/biome": "2.5.14",
     "@discordjs/collection": "2.1.1",
     "@types/bun": "1.4.2",
-    "@types/node": "26.6.2",
+    "@types/node": "26.6.3",
     "chalk": "6.0.0",
-    "cspell": "10.3.3",
-    "cve-lite-cli": "1.36.1",
+    "cspell": "10.3.4",
+    "cve-lite-cli": "1.37.0",
     "globals": "17.12.0",
     "ini": "7.0.0",
     "typescript": "7.0.2"
@@ -65,7 +65,7 @@
     "@ctrl/tinycolor": "^4.2.1",
     "@jarrodek/pluralize": "^1.0.2",
     "@postfmly/checkrate": "^1.0.12",
-    "@postfmly/logger": "^1.0.30",
+    "@postfmly/logger": "^1.0.32",
     "@postfmly/logoserver": "^1.3.1",
     "@postfmly/types": "^1.0.2",
     "canvas": "^3.2.3",
@@ -80,12 +80,12 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@postfmly/config": "^1.4.74",
+    "@postfmly/config": "^1.4.78",
     "drizzle-kit": "1.0.0-rc.4",
     "expect-type": "^1.4.0",
     "husky": "^9.1.7",
     "lcov-total": "^2.1.1",
-    "lint-staged": "^17.5.1"
+    "lint-staged": "^17.6.0"
   },
   "packageManager": "bun@1.4.2",
   "engines": {
