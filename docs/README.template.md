@@ -81,9 +81,9 @@
 
 ##### From `@postfmly/checkrate`:
 
-| 📝 Description | 📌 Variable | {...} Value |
-|:--------------:|:-----------:|:-----------:|
-|   Rate Limit   |    RATE     |     1s      |
+|      📝 Description       | 📌 Variable | {...} Value |
+|:-------------------------:|:-----------:|:-----------:|
+| Rate Limit *(in seconds)* |    RATE     |     1s      |
 
 #### Deployment:
 

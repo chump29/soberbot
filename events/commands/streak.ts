@@ -1,6 +1,6 @@
 import { parse } from "node:path"
 
-import { checkRate } from "@postfmly/checkrate"
+import { allow } from "@postfmly/checkrate"
 
 import { mostReadable, random as randomColor, TinyColor } from "@ctrl/tinycolor"
 import { Canvas, type CanvasRenderingContext2D, registerFont } from "canvas"
@@ -97,7 +97,12 @@ const createImage = (txt: string[]): AttachmentBuilder => {
 }
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
-  if (await checkRate(interaction)) {
+  if (!allow()) {
+    await interaction.reply({
+      content: "❌ Rate limit exceeded",
+      ephemeral: true
+    })
+
     return
   }
 

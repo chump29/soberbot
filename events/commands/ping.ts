@@ -1,6 +1,6 @@
 import { parse } from "node:path"
 
-import { checkRate } from "@postfmly/checkrate"
+import { allow } from "@postfmly/checkrate"
 
 import {
   type ChatInputCommandInteraction,
@@ -24,7 +24,12 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
     .toJSON()
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
-  if (await checkRate(interaction)) {
+  if (!allow()) {
+    await interaction.reply({
+      content: "❌ Rate limit exceeded",
+      ephemeral: true
+    })
+
     return
   }
 

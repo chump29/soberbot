@@ -91,4 +91,10 @@ const env = cleanEnv(Bun.env, {
   TOKEN: tokenValidator({ testDefault: fakeToken })
 })
 
+if (import.meta.main) {
+  const { red } = await import("picocolors") // * from @postfmly/logger
+  const REDACTED: string = red("[REDACTED]")
+  console.table({ ...env, CHANNEL_ID: REDACTED, TOKEN: REDACTED })
+}
+
 export { env }
