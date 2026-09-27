@@ -64,9 +64,9 @@
   "dependencies": {
     "@ctrl/tinycolor": "^4.2.1",
     "@jarrodek/pluralize": "^1.0.2",
-    "@postfmly/checkrate": "^1.0.12",
-    "@postfmly/logger": "^1.0.32",
-    "@postfmly/logoserver": "^1.3.1",
+    "@postfmly/checkrate": "^1.2.2",
+    "@postfmly/logger": "^1.0.33",
+    "@postfmly/logoserver": "^1.3.4",
     "@postfmly/types": "^1.0.2",
     "canvas": "^3.2.3",
     "dayjs": "^1.11.23",
@@ -80,7 +80,7 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@postfmly/config": "^1.4.78",
+    "@postfmly/config": "^1.4.79",
     "drizzle-kit": "1.0.0-rc.4",
     "expect-type": "^1.4.0",
     "husky": "^9.1.7",
