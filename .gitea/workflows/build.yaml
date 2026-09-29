@@ -55,8 +55,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
 
       - name: Build and push
-        run: docker buildx build --platform linux/amd64 --tag
-          git.postfmly.com/admin/soberbot:amd64 --push .
+        run: docker buildx build --platform linux/amd64 --tag git.postfmly.com/admin/soberbot:amd64 --push .
 
   arm64:
     needs: [check]
@@ -73,8 +72,7 @@ jobs:
           password: ${{ secrets.PASSWORD }}
 
       - name: Build and push
-        run: docker buildx build --platform linux/arm64 --tag
-          git.postfmly.com/admin/soberbot:arm64 --push .
+        run: docker buildx build --platform linux/arm64 --tag git.postfmly.com/admin/soberbot:arm64 --push .
 
   manifest:
     needs: [amd64, arm64]
