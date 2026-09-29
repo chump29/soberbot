@@ -12,6 +12,7 @@ import {
   SlashCommandBuilder
 } from "discord.js"
 
+import { bucket } from "../../index.ts"
 import { DB, type IData, type ISubstanceData } from "../../utils/db.ts"
 import { env } from "../../utils/env.ts"
 
@@ -46,6 +47,12 @@ const getFields = (data: IData): APIEmbedField[] => {
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
   await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
+  if (!bucket.allow(interaction.user.username)) {
+    await interaction.editReply({ content: "❌ Rate limit exceeded" })
+
+    return
+  }
 
   await DB.getList(interaction.user.id).then(async (msg: IData | string): Promise<void> => {
     if (typeof msg === "string") {

@@ -62,10 +62,7 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
   await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
   if (!bucket.allow(interaction.user.username)) {
-    await interaction.reply({
-      content: "❌ Rate limit exceeded",
-      ephemeral: true
-    })
+    await interaction.editReply({ content: "❌ Rate limit exceeded" })
 
     return
   }

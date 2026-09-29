@@ -26,7 +26,7 @@
 
 ### 🔗 Invite Link
 
-[Add SoberBot](https://discord.com/oauth2/authorize?client_id=1523517133835866162&permissions=83968&integration_type=0&scope=bot)
+[Add SoberBot](https://discord.com/oauth2/authorize?client_id=1523517133835866162&permissions=18432&integration_type=0&scope=bot)
 
 ---
 
@@ -34,11 +34,10 @@
 
 #### Role Permissions:
 
-|   ⚙️ Permissions   |
-|:------------------:|
-|     EmbedLinks     |
-| ReadMessageHistory |
-|    SendMessages    |
+| ⚙️ Permissions |
+|:--------------:|
+|   EmbedLinks   |
+|  SendMessages  |
 
 #### Commands:
 
@@ -61,7 +60,6 @@
 
 | 📝 Description | 📌 Variable |  {...} Value   |
 |:--------------:|:-----------:|:--------------:|
-|   Channel ID   | CHANNEL_ID  |      [id]      |
 |  Embed Color   |    COLOR    |    #78866b     |
 |    DB Name     |   DB_NAME   |  soberbot.db   |
 |    DB Path     |   DB_PATH   |      ./db      |

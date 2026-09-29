@@ -6,7 +6,7 @@ import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
   InteractionContextType,
-  type InteractionReplyOptions,
+  type InteractionEditReplyOptions,
   MessageFlags,
   PermissionFlagsBits,
   type RESTPostAPIChatInputApplicationCommandsJSONBody,
@@ -96,11 +96,10 @@ const createImage = (txt: string[]): AttachmentBuilder => {
 }
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
   if (!bucket.allow(interaction.user.username)) {
-    await interaction.reply({
-      content: "❌ Rate limit exceeded",
-      ephemeral: true
-    })
+    await interaction.editReply({ content: "❌ Rate limit exceeded" })
 
     return
   }
@@ -108,19 +107,14 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
   await DB.getDate(interaction.user.id, (interaction.options.getString("name") as string).trim()).then(
     async (msg: string[]): Promise<void> => {
       if (!msg[0]) {
-        await interaction.reply({
-          content: "-# > ❌ Invalid response",
-          flags: MessageFlags.Ephemeral
-        })
+        await interaction.editReply({ content: "-# > ❌ Invalid response" })
 
         return
       }
 
       const isError: boolean = msg[0].startsWith("❌")
 
-      const reply: InteractionReplyOptions = {
-        flags: isError ? MessageFlags.Ephemeral : MessageFlags.SuppressNotifications
-      }
+      const reply: InteractionEditReplyOptions = {}
 
       if (isError) {
         reply.content = `-# > ${msg[0]}`
@@ -128,7 +122,7 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
         reply.files = [createImage(msg)]
       }
 
-      await interaction.reply(reply)
+      await interaction.editReply(reply)
     }
   )
 }
