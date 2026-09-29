@@ -1,7 +1,5 @@
 import { parse } from "node:path"
 
-import { allow } from "@postfmly/checkrate"
-
 import {
   type ChatInputCommandInteraction,
   InteractionContextType,
@@ -13,6 +11,7 @@ import {
 } from "discord.js"
 
 import { MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
+import { bucket } from "../../index.ts"
 import { DB } from "../../utils/db.ts"
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
@@ -33,7 +32,9 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
     .toJSON()
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
-  if (!allow()) {
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
+  if (!bucket.allow(interaction.user.username)) {
     await interaction.reply({
       content: "❌ Rate limit exceeded",
       ephemeral: true
@@ -41,8 +42,6 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
 
     return
   }
-
-  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
   await DB.resetDate(interaction.user.id, (interaction.options.getString("name") as string).trim()).then(
     async (msg: string): Promise<void> => {

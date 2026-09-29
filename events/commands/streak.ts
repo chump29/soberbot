@@ -1,7 +1,5 @@
 import { parse } from "node:path"
 
-import { allow } from "@postfmly/checkrate"
-
 import { mostReadable, random as randomColor, TinyColor } from "@ctrl/tinycolor"
 import { Canvas, type CanvasRenderingContext2D, registerFont } from "canvas"
 import {
@@ -18,6 +16,7 @@ import {
 import { default as ShortUniqueId } from "short-unique-id"
 
 import { MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
+import { bucket } from "../../index.ts"
 import { DB } from "../../utils/db.ts"
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
@@ -97,7 +96,7 @@ const createImage = (txt: string[]): AttachmentBuilder => {
 }
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
-  if (!allow()) {
+  if (!bucket.allow(interaction.user.username)) {
     await interaction.reply({
       content: "❌ Rate limit exceeded",
       ephemeral: true

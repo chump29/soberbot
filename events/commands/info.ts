@@ -1,7 +1,5 @@
 import { parse } from "node:path"
 
-import { allow } from "@postfmly/checkrate"
-
 import {
   type ChatInputCommandInteraction,
   EmbedBuilder,
@@ -13,6 +11,7 @@ import {
   SlashCommandBuilder
 } from "discord.js"
 
+import { bucket } from "../../index.ts"
 import { author, version } from "../../package.json" with { type: "json" }
 import { env } from "../../utils/env.ts"
 
@@ -27,7 +26,9 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
     .toJSON()
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
-  if (!allow()) {
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
+  if (!bucket.allow(interaction.user.username)) {
     await interaction.reply({
       content: "❌ Rate limit exceeded",
       ephemeral: true
@@ -35,8 +36,6 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
 
     return
   }
-
-  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
   await interaction.editReply({
     embeds: [

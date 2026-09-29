@@ -92,8 +92,8 @@ const env = cleanEnv(Bun.env, {
 })
 
 if (import.meta.main) {
-  const { red } = await import("picocolors") // * from @postfmly/logger
-  const REDACTED: string = red("[REDACTED]")
+  const { styleText } = await import("node:util")
+  const REDACTED: string = styleText("red", "[REDACTED]")
   console.table({ ...env, CHANNEL_ID: REDACTED, TOKEN: REDACTED })
 }
 

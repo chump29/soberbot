@@ -1,7 +1,5 @@
 import { parse } from "node:path"
 
-import { allow } from "@postfmly/checkrate"
-
 import {
   type ChatInputCommandInteraction,
   InteractionContextType,
@@ -11,6 +9,7 @@ import {
   SlashCommandBuilder
 } from "discord.js"
 
+import { bucket } from "../../index.ts"
 import { env } from "../../utils/env.ts"
 
 const { NAME } = env as typeof env
@@ -24,7 +23,9 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
     .toJSON()
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
-  if (!allow()) {
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
+  if (!bucket.allow(interaction.user.username)) {
     await interaction.reply({
       content: "❌ Rate limit exceeded",
       ephemeral: true
@@ -32,8 +33,6 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
 
     return
   }
-
-  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
   await interaction.editReply({
     content: `-# > **Pong!** ⚡ Your latency is: \`${Date.now() - interaction.createdTimestamp}ms\``

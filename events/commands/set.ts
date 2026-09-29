@@ -1,7 +1,5 @@
 import { parse } from "node:path"
 
-import { allow } from "@postfmly/checkrate"
-
 import { default as dayjs } from "dayjs"
 import {
   type ChatInputCommandInteraction,
@@ -15,6 +13,7 @@ import {
 } from "discord.js"
 
 import { DATE_FORMAT, MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
+import { bucket } from "../../index.ts"
 import { DB } from "../../utils/db.ts"
 
 const YEARS_AGO: number = 100
@@ -60,7 +59,9 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
     .toJSON()
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
-  if (!allow()) {
+  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
+  if (!bucket.allow(interaction.user.username)) {
     await interaction.reply({
       content: "❌ Rate limit exceeded",
       ephemeral: true
@@ -68,8 +69,6 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
 
     return
   }
-
-  await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
   const date: dayjs.Dayjs = dayjs(
     `${interaction.options.getInteger("year")}-${interaction.options.getInteger("month")}-${interaction.options.getInteger("day")}`
