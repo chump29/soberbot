@@ -26,7 +26,7 @@
 
 ### 🔗 Invite Link
 
-[Add SoberBot](https://discord.com/oauth2/authorize?client_id=1523517133835866162&permissions=18432&integration_type=0&scope=bot)
+[Add SoberBot](https://discord.com/oauth2/authorize?client_id=1523517133835866162&permissions=16384&integration_type=0&scope=bot)
 
 ---
 
@@ -37,20 +37,19 @@
 | ⚙️ Permissions |
 |:--------------:|
 |   EmbedLinks   |
-|  SendMessages  |
 
 #### Commands:
 
-|    📋 Task     |        🔧 Command        | ⚙️ Permission |
-|:--------------:|:------------------------:|:-------------:|
-| List All Dates |          `/all`          | Administrator |
-|  Delete Date   |  `/delete <name\|all>`   | SendMessages  |
-|      Info      |         `/info`          | SendMessages  |
-|   List Dates   |         `/list`          | SendMessages  |
-|      Ping      |         `/ping`          | SendMessages  |
-|   Reset Date   |     `/reset <name>`      | SendMessages  |
-|    Set Date    | `/set YYYY-MM-DD <name>` | SendMessages  |
-|  Show Streak   |  `/streak <name\|all>`   | SendMessages  |
+|    📋 Task     |        🔧 Command        | ⚙️ Member Permission |
+|:--------------:|:------------------------:|:--------------------:|
+| List All Dates |          `/all`          |    Administrator     |
+|  Delete Date   |  `/delete <name\|all>`   |         None         |
+|      Info      |         `/info`          |         None         |
+|   List Dates   |         `/list`          |         None         |
+|      Ping      |         `/ping`          |         None         |
+|   Reset Date   |     `/reset <name>`      |         None         |
+|    Set Date    | `/set YYYY-MM-DD <name>` |         None         |
+|  Show Streak   |  `/streak <name\|all>`   |         None         |
 
 ---
 

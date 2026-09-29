@@ -8,7 +8,6 @@ import {
   InteractionContextType,
   type InteractionEditReplyOptions,
   MessageFlags,
-  PermissionFlagsBits,
   type RESTPostAPIChatInputApplicationCommandsJSONBody,
   SlashCommandBuilder,
   type SlashCommandStringOption
@@ -32,7 +31,6 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
           .setMinLength(MIN_NAME_LEN)
           .setMaxLength(MAX_NAME_LEN)
     )
-    .setDefaultMemberPermissions(PermissionFlagsBits.SendMessages)
     .setContexts(InteractionContextType.Guild)
     .toJSON()
 
