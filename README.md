@@ -63,18 +63,17 @@
 |    DB Name     |   DB_NAME   |  soberbot.db   |
 |    DB Path     |   DB_PATH   |      ./db      |
 |     Debug      |    DEBUG    | true/**false** |
-|    Logo URL    |  LOGO_URL   |     [url]      |
 |    Bot Name    |    NAME     |    SoberBot    |
-|   Bot Token    |    TOKEN    |    [token]     |
+|   Bot Token    |    TOKEN    |    \<token>    |
 
 ##### From `@postfmly/logoserver`:
 
 | 📝 Description | 📌 Variable |    {...} Value    |
 |:--------------:|:-----------:|:-----------------:|
-|   IPv4/IPv6    |  LOGO_IPv6  |  true/**false**   |
 |   Logo Name    |  LOGO_NAME  |   soberbot.webp   |
 |   Local Path   |  LOGO_PATH  |  ./utils/images   |
 |      Port      |  LOGO_PORT  | **Random**/[port] |
+|    Logo URL    |  LOGO_URL   |      \<url>       |
 
 ##### From `@postfmly/checkrate`:
 
