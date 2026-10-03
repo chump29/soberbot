@@ -9,6 +9,7 @@ on:
 
 env:
   BUN_INSTALL_CACHE_DIR: /tmp/.bun-cache
+  HUSKY: 0
 
 jobs:
   check:
