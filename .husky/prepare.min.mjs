@@ -1,0 +1,2 @@
+// @bun
+var s=(e,t,r)=>()=>{if(e)try{t=e(e=0)}catch(i){r=[i]}if(r)throw r[0];return t};var o=()=>{};import n from"process";if(n.env.CI==="true")console.info("Skipping prepare hook..."),n.exit(0);await Promise.resolve().then(() => (o(),{}));

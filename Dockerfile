@@ -18,7 +18,7 @@ WORKDIR /app
 
 ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
 
-COPY package.json bun.lock ./
+COPY package.json bun.lock .husky/prepare.min.mjs ./
 COPY patches/ ./patches/
 
 RUN --mount=type=cache,target=/.bun-cache \
