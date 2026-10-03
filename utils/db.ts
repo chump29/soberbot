@@ -1,3 +1,5 @@
+import { join } from "node:path"
+
 import { Database } from "bun:sqlite"
 
 import { error, info } from "@postfmly/logger"
@@ -25,8 +27,6 @@ import {
 import { env } from "./env.ts"
 
 dayjs.extend(duration)
-
-const { DB_NAME, DB_PATH, DEBUG } = env as typeof env
 
 interface ISubstanceData {
   date: string
@@ -66,12 +66,12 @@ class SoberBotDatabase implements ISoberBotDatabase {
   _db: Nullable<DBType> = null
 
   open(): void {
-    if (this._db && DEBUG) {
+    if (this._db && env.DEBUG) {
       info("⚠️  Database already open")
       return
     }
 
-    const dbPathName: string = `${DB_PATH}/${DB_NAME}`
+    const dbPathName: string = join(env.DB_PATH, env.DB_NAME)
 
     this.client = new Database(dbPathName, {
       create: true,
@@ -93,16 +93,16 @@ class SoberBotDatabase implements ISoberBotDatabase {
     })
 
     migrate(this._db, {
-      migrationsFolder: DB_PATH
+      migrationsFolder: env.DB_PATH
     })
 
-    if (DEBUG) {
+    if (env.DEBUG) {
       info(`▶️  Using database: ${dbPathName}`)
     }
   }
 
   close(): void {
-    if (!this.client && DEBUG) {
+    if (!this.client && env.DEBUG) {
       info("⚠️  Database already closed")
       return
     }
@@ -112,7 +112,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
     this.client = null
     this._db = null
 
-    if (DEBUG) {
+    if (env.DEBUG) {
       info("⏹️  Database closed")
     }
   }

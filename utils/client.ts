@@ -10,8 +10,6 @@ import { loadCommands } from "../events/loadCommands.ts"
 import { DB } from "./db.ts"
 import { env } from "./env.ts"
 
-const { DEBUG, LOGO_NAME, LOGO_PATH, LOGO_PORT, TOKEN } = env as typeof env
-
 let SERVER: Nullable<LogoServer> = null
 
 let CLIENT: Nullable<Client> = null
@@ -24,7 +22,7 @@ const shutdown = async (event: string = "ERROR"): Promise<void> => {
     return
   }
 
-  if (DEBUG) {
+  if (env.DEBUG) {
     info(`❌ ${event} detected`)
   }
 
@@ -48,19 +46,19 @@ const login = async (): Promise<void> => {
 
   CLIENT = TEST_CLIENT ?? CLIENT
 
-  await CLIENT.login(TOKEN)
+  await CLIENT.login(env.TOKEN)
 
-  if (CLIENT.user && DEBUG) {
+  if (CLIENT.user && env.DEBUG) {
     info(`⚡ Connected as ${CLIENT.user.displayName} (${CLIENT.user.tag})`)
   }
 }
 
 const init = async (): Promise<Client> => {
   SERVER = new LogoServer({
-    DEBUG,
-    LOGO_NAME,
-    LOGO_PATH,
-    LOGO_PORT
+    DEBUG: env.DEBUG,
+    LOGO_NAME: env.LOGO_NAME,
+    LOGO_PATH: env.LOGO_PATH,
+    LOGO_PORT: env.LOGO_PORT
   } as ILogoServerConfig)
 
   await SERVER.start()

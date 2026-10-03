@@ -10,21 +10,22 @@ import { titleCase } from "title-case"
 import { DATE_FORMAT, type ISubstance, type IUser, MAX_USER_ID_LEN, substances, users } from "../../db/schema.ts"
 import { DB, type IData } from "../../utils/db.ts"
 
-const LEN: number = 2
+const NUM_SUBSTANCES: number = 2
 
 const userId: string = fake.string.numeric({ allowLeadingZeros: false, length: MAX_USER_ID_LEN })
-let name: string = ""
+let substanceName: string = ""
 
-const getName = (): string => {
+const getSubstanceName = (): string => {
   let tmp: string = ""
   do {
     tmp = fake.lorem.word()
-  } while (tmp === name)
-  if (name.length === 0) {
-    name = tmp
+  } while (tmp === substanceName)
+  if (substanceName.length === 0) {
+    substanceName = tmp
   }
   return tmp
 }
+
 const getDate = (): string => dayjs(fake.date.past({ years: 10 })).format(DATE_FORMAT)
 
 const infoSpy: jest.Mock = spyOn(console, "info")
@@ -49,8 +50,8 @@ beforeAll(async (): Promise<void> => {
       .insert(substances)
       .values(
         Array.from(
-          { length: LEN },
-          (): ISubstance => ({ userId, date: getDate(), name: getName() }) satisfies ISubstance
+          { length: NUM_SUBSTANCES },
+          (): ISubstance => ({ userId, date: getDate(), name: getSubstanceName() }) satisfies ISubstance
         )
       )
   })
@@ -65,7 +66,7 @@ describe("db", (): void => {
     const data: IData[] = (await DB.getAll()) as IData[]
 
     expect(data).toHaveLength(1)
-    expect(data[0]?.substances).toHaveLength(LEN)
+    expect(data[0]?.substances).toHaveLength(NUM_SUBSTANCES)
   })
 
   test("getList", async (): Promise<void> => {
@@ -73,29 +74,29 @@ describe("db", (): void => {
 
     expect(data.userId).toBe(userId)
 
-    expect(data.substances.length).toBe(LEN)
+    expect(data.substances.length).toBe(NUM_SUBSTANCES)
   })
 
   test("getDate - name", async (): Promise<void> => {
-    const msg: string[] = await DB.getDate(userId, name)
+    const msg: string[] = await DB.getDate(userId, substanceName)
 
     expect(msg).toHaveLength(1)
-    expect(msg[0]).toContain(name)
+    expect(msg[0]).toContain(substanceName)
   })
 
   test("getDate - all", async (): Promise<void> => {
     const msg: string[] = await DB.getDate(userId, "all")
 
-    expect(msg).toHaveLength(LEN)
-    expect(msg).toEqual(expect.arrayContaining([expect.stringContaining(name)]))
+    expect(msg).toHaveLength(NUM_SUBSTANCES)
+    expect(msg).toEqual(expect.arrayContaining([expect.stringContaining(substanceName)]))
   })
 
   test("setData", async (): Promise<void> => {
     const date: string = dayjs(fake.date.past()).format(DATE_FORMAT)
 
-    const substance: string = getName()
+    const substance: string = getSubstanceName()
 
-    const msg: string = await DB.setDate(userId, name, date, substance)
+    const msg: string = await DB.setDate(userId, substanceName, date, substance)
 
     expect(msg).toContain(date)
 
@@ -129,15 +130,15 @@ describe("db", (): void => {
   })
 
   test("deleteDate - name", async (): Promise<void> => {
-    const msg: string = await DB.deleteDate(userId, name)
+    const msg: string = await DB.deleteDate(userId, substanceName)
 
-    expect(msg).toContain(titleCase(name))
+    expect(msg).toContain(titleCase(substanceName))
 
     assert(DB._db)
 
-    expect(await DB._db.$count(substances, eq(substances.name, name))).toBe(0)
+    expect(await DB._db.$count(substances, eq(substances.name, substanceName))).toBe(0)
 
-    expect(await DB._db.$count(substances, ne(substances.name, name))).toBe(LEN)
+    expect(await DB._db.$count(substances, ne(substances.name, substanceName))).toBe(NUM_SUBSTANCES)
   })
 
   test("deleteDate - all", async (): Promise<void> => {

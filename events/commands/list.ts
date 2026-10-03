@@ -11,15 +11,13 @@ import {
   SlashCommandBuilder
 } from "discord.js"
 
-import { bucket } from "../../index.ts"
+import { bucket } from "../../utils/bucket.ts"
 import { DB, type IData, type ISubstanceData } from "../../utils/db.ts"
 import { env } from "../../utils/env.ts"
 
-const { COLOR, NAME } = env as typeof env
-
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(import.meta.filename).name)
+    .setName(parse(import.meta.file).name)
     .setDescription("List streaks")
     .setContexts(InteractionContextType.Guild)
     .toJSON()
@@ -59,8 +57,8 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
       await interaction.editReply({
         embeds: [
           new EmbedBuilder()
-            .setColor(COLOR as HexColorString)
-            .setTitle(`${NAME} Dates for ${interaction.user.displayName}`)
+            .setColor(env.COLOR as HexColorString)
+            .setTitle(`${env.NAME} Dates for ${interaction.user.displayName}`)
             .setFields(getFields(msg))
             .toJSON()
         ]

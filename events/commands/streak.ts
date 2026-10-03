@@ -15,12 +15,12 @@ import {
 import { default as ShortUniqueId } from "short-unique-id"
 
 import { MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
-import { bucket } from "../../index.ts"
+import { bucket } from "../../utils/bucket.ts"
 import { DB } from "../../utils/db.ts"
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(import.meta.filename).name)
+    .setName(parse(import.meta.file).name)
     .setDescription("Get substance streak(s)")
     .addStringOption(
       (option: SlashCommandStringOption): SlashCommandStringOption =>
@@ -53,7 +53,7 @@ tmp.font = fontStyle
 const icon: string = "🔥 "
 const iconWidth: number = tmp.measureText(icon).width
 
-const whiteOrBlack = (color: string): string => (new TinyColor(color).isLight() ? "black" : "white")
+const blackOrWhite = (color: string): "black" | "white" => (new TinyColor(color).isLight() ? "black" : "white")
 
 const createImage = (txt: string[]): AttachmentBuilder => {
   const w: number = Math.max(
@@ -71,7 +71,7 @@ const createImage = (txt: string[]): AttachmentBuilder => {
   ctx.roundRect(0, 0, w, h, radius)
   ctx.fill()
 
-  const txtColor: string = whiteOrBlack(bgColor)
+  const txtColor: string = blackOrWhite(bgColor)
 
   ctx.font = fontStyle
   ctx.textBaseline = "middle"

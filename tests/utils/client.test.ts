@@ -8,8 +8,6 @@ import { type Client, type ClientUser } from "discord.js"
 import { init, shutdown } from "../../utils/client.ts"
 import { env } from "../../utils/env.ts"
 
-const { NAME } = env as typeof env
-
 const infoSpy: jest.Mock = spyOn(console, "info")
 
 beforeAll((): void => {
@@ -18,11 +16,7 @@ beforeAll((): void => {
 
 describe("client", (): void => {
   test("shutdown", (): void => {
-    mock.module("../utils/db.ts", (): unknown => ({
-      DB: {
-        close: jest.fn()
-      }
-    }))
+    mock.module("../utils/db.ts", (): unknown => ({ DB: { close: jest.fn() } }))
 
     spyOn(process, "exit").mockImplementation((code: number): never => {
       throw new Error(code.toString())
@@ -40,15 +34,12 @@ describe("client", (): void => {
   test("init", async (): Promise<void> => {
     infoSpy.mockClear()
 
-    const tag: string = `${NAME}#${fake.string.numeric({ allowLeadingZeros: false, length: 4 })}`
+    const tag: string = `${env.NAME}#${fake.string.numeric({ allowLeadingZeros: false, length: 4 })}`
 
     mock.module("../../utils/client.ts", (): unknown => ({
       TEST_CLIENT: {
         login: jest.fn(),
-        user: {
-          displayName: NAME,
-          tag
-        } as ClientUser
+        user: { displayName: env.NAME, tag } as ClientUser
       } as unknown as Client
     }))
 
@@ -59,7 +50,7 @@ describe("client", (): void => {
     const count: number = 5
 
     expect(infoSpy).toHaveBeenCalledTimes(count)
-    expect(infoSpy).toHaveBeenNthCalledWith(count, expect.any(String), expect.stringContaining(NAME))
+    expect(infoSpy).toHaveBeenNthCalledWith(count, expect.any(String), expect.stringContaining(env.NAME))
     expect(infoSpy).toHaveBeenNthCalledWith(count, expect.any(String), expect.stringContaining(tag))
 
     process.emit("SIGINT")

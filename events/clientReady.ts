@@ -6,26 +6,27 @@ import { info } from "@postfmly/logger"
 import { type Client, type RESTPostAPIChatInputApplicationCommandsJSONBody } from "discord.js"
 
 import { env } from "../utils/env.ts"
-import { type ICommandFile } from "./loadCommands.ts"
 
-const { DEBUG } = env as typeof env
+interface ICommandFile {
+  create: () => Promise<RESTPostAPIChatInputApplicationCommandsJSONBody>
+}
 
 const invoke = async (client: Client): Promise<void> => {
   if (!(client.application && client.user)) {
     throw new Error("Invalid client")
   }
 
-  const commands: string[] = await readdir(`${import.meta.dirname}/commands`).then((dir: string[]): string[] =>
-    dir.filter((file: string): boolean => file.endsWith(".ts"))
+  const commands: string[] = (await readdir(`${import.meta.dir}/commands`)).filter((file: string): boolean =>
+    file.endsWith(".ts")
   )
 
   const commandsArray: RESTPostAPIChatInputApplicationCommandsJSONBody[] = []
-  await Promise.all(
+  await Promise.allSettled(
     commands.map(async (command: string): Promise<void> => {
-      const commandFile: ICommandFile = await import(`${import.meta.dirname}/commands/${command}`)
+      const commandFile: ICommandFile = await import(`${import.meta.dir}/commands/${command}`)
       commandsArray.push(await commandFile.create())
 
-      if (DEBUG) {
+      if (env.DEBUG) {
         info(`🔨 Loaded /${parse(command).name} command`)
       }
     })

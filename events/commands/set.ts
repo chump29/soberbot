@@ -12,7 +12,7 @@ import {
 } from "discord.js"
 
 import { DATE_FORMAT, MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
-import { bucket } from "../../index.ts"
+import { bucket } from "../../utils/bucket.ts"
 import { DB } from "../../utils/db.ts"
 
 const YEARS_AGO: number = 100
@@ -25,7 +25,7 @@ const MAX_DAY: number = 31
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
-    .setName(parse(import.meta.filename).name)
+    .setName(parse(import.meta.file).name)
     .setDescription("Set substance date")
     .addIntegerOption(
       (option: SlashCommandIntegerOption): SlashCommandIntegerOption =>

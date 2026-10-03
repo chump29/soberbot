@@ -6,7 +6,11 @@ import { type GenericSchema, isoDate, maxLength, maxValue, minLength, nonEmpty, 
 
 const MIN_NAME_LEN: number = 1
 const MAX_NAME_LEN: number = 30
+
+const MIN_USER_ID_LEN: number = 17
 const MAX_USER_ID_LEN: number = 19
+
+const MIN_USER_NAME_LEN: number = 2
 const MAX_USER_NAME_LEN: number = 32
 
 const DATE_FORMAT: string = "YYYY-MM-DD"
@@ -22,8 +26,8 @@ const users = snakeCase.table("users", {
 type IUser = Omit<typeof users.$inferSelect, "id">
 
 const UserSchema = createInsertSchema(users, {
-  userId: (): GenericSchema => pipe(StringSchema, maxLength(MAX_USER_ID_LEN)),
-  userName: (): GenericSchema => pipe(StringSchema, maxLength(MAX_USER_NAME_LEN))
+  userId: (): GenericSchema => pipe(StringSchema, minLength(MIN_USER_ID_LEN), maxLength(MAX_USER_ID_LEN)),
+  userName: (): GenericSchema => pipe(StringSchema, minLength(MIN_USER_NAME_LEN), maxLength(MAX_USER_NAME_LEN))
 })
 
 type UserSchema = typeof UserSchema
@@ -70,6 +74,7 @@ export {
   MAX_NAME_LEN,
   MAX_USER_ID_LEN,
   MIN_NAME_LEN,
+  MIN_USER_ID_LEN,
   relations,
   SubstanceSchema,
   substances,
