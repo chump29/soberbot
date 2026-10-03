@@ -1,15 +1,15 @@
 *
 
-!.husky/prepare.min.mjs
 !bun.lock
 !db/
 !env.ts
 !events/
-!patches/
-!utils/
 !healthcheck.sh
 !index.ts
 !package.json
+!patches/
+!prepare.min.mjs
 !tsconfig.json
+!utils/
 
 db/soberbot*

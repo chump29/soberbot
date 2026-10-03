@@ -25,7 +25,7 @@
   },
   "type": "module",
   "scripts": {
-    "check": "bunx --bun depcheck --ignores=\"@postfmly/config,@types/*,bun,bun:*,husky,lcov-total\"",
+    "check": "bunx --bun depcheck --ignores=\"@postfmly/config,@types/*,bun,bun:*,lcov-total\"",
     "dev": "bun run --bun --watch index.ts",
     "preinstall": "bunx --bun only-allow bun",
     "lint": "bun run scan && bun run lint:spell && bun run lint:biome && bun run lint:env && bun run lint:ts",

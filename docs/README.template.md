@@ -78,9 +78,7 @@
 
 ##### From `@postfmly/checkrate`:
 
-|      📝 Description       | 📌 Variable | {...} Value |
-|:-------------------------:|:-----------:|:-----------:|
-| Rate Limit *(in seconds)* |    RATE     |     1s      |
+###### *NOTE: Rate limited to 1 request per 1 second*
 
 #### Deployment:
 

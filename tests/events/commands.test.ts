@@ -146,7 +146,6 @@ await Promise.all(
             expect(data.fields).not.toBeEmpty()
           })
           .with(P.union("delete", "list", "reset", "streak"), (): void => expect(payload.content).toInclude("❌"))
-          .with("ping", (): void => expect(payload.content).toInclude("Pong"))
           .with("info", (): void => {
             const data = payload.embeds?.[0].data
 
@@ -157,6 +156,7 @@ await Promise.all(
             expect(data.description).not.toBeEmpty()
             expect(data.footer.text).toEndWith(author.name)
           })
+          .with("ping", (): void => expect(payload.content).toInclude("Pong"))
           .with("set", (): void => expect(payload.content).not.toBeEmpty())
           .otherwise((): void => {
             throw new Error(`Payload tests not found for /${name}`)
