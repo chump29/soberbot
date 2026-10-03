@@ -22,7 +22,7 @@ COPY package.json bun.lock ./
 COPY patches/ ./patches/
 
 RUN --mount=type=cache,target=/.bun-cache \
-  bun install --frozen-lockfile --production
+  bun ci --production
 
 # -=-
 
