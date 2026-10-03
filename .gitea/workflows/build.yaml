@@ -9,7 +9,6 @@ on:
 
 env:
   BUN_INSTALL_CACHE_DIR: /tmp/.bun-cache
-  HUSKY: 0
 
 jobs:
   check:
@@ -26,6 +25,9 @@ jobs:
         with:
           key: bun-${{ github.event.repository.name }}-${{ hashFiles('./bun.lock') }}
           path: ${{ env.BUN_INSTALL_CACHE_DIR }}
+
+      - name: CI
+        run: echo $CI
 
       - name: Install dependencies
         env:
