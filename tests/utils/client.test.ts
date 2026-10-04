@@ -16,7 +16,7 @@ beforeAll((): void => {
 
 describe("client", (): void => {
   test("shutdown", (): void => {
-    mock.module("../utils/db.ts", (): unknown => ({ DB: { close: jest.fn() } }))
+    mock.module("../utils/db.ts", (): unknown => ({ DB: { close: jest.fn().mockReturnValue(undefined) } }))
 
     spyOn(process, "exit").mockImplementation((code: number): never => {
       throw new Error(code.toString())
@@ -38,7 +38,7 @@ describe("client", (): void => {
 
     mock.module("../../utils/client.ts", (): unknown => ({
       TEST_CLIENT: {
-        login: jest.fn(),
+        login: jest.fn().mockResolvedValue(undefined),
         user: { displayName: env.NAME, tag } as ClientUser
       } as unknown as Client
     }))
