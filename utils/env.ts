@@ -71,6 +71,7 @@ if (Bun.env.NODE_ENV === "test") {
 }
 
 const env = cleanEnv(Bun.env, {
+  ACTIVITY: str({ default: "Tracking" }),
   COLOR: colorValidator({ default: "#78866b" }),
   DB_NAME: str({ default: "soberbot.db", testDefault: "soberbot.test.db" }),
   DB_PATH: str({ default: "./db" }),

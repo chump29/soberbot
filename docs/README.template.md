@@ -59,6 +59,7 @@
 
 | 📝 Description | 📌 Variable |  {...} Value   |
 |:--------------:|:-----------:|:--------------:|
+|    Activity    |  ACTIVITY   |    Tracking    |
 |  Embed Color   |    COLOR    |    #78866b     |
 |    DB Name     |   DB_NAME   |  soberbot.db   |
 |    DB Path     |   DB_PATH   |      ./db      |
