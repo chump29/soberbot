@@ -102,7 +102,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
   }
 
   close(): void {
-    if (!this.client && env.DEBUG) {
+    if (!this._db && env.DEBUG) {
       info("⚠️  Database already closed")
       return
     }
