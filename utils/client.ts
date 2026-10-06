@@ -53,7 +53,7 @@ const login = async (): Promise<void> => {
   }
 }
 
-const init = async (): Promise<Client> => {
+const init = async (): Promise<void> => {
   SERVER = new LogoServer({
     DEBUG: env.DEBUG,
     LOGO_NAME: env.LOGO_NAME,
@@ -88,8 +88,6 @@ const init = async (): Promise<Client> => {
   await loadCommands(CLIENT)
 
   await login()
-
-  return CLIENT
 }
 
 export { init, shutdown, TEST_CLIENT }

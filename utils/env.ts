@@ -2,9 +2,8 @@ import { printVars } from "@postfmly/logger"
 import { type Optional } from "@postfmly/types"
 
 import { bool, cleanEnv, type ExactValidator, makeExactValidator, str, url } from "envalid"
-import { anyOf, caseInsensitive, createRegExp, exactly, wordChar } from "magic-regexp"
+import { anyOf, caseInsensitive, charIn, createRegExp, exactly, wordChar } from "magic-regexp"
 import {
-  hexColor,
   integer,
   literal,
   maxValue,
@@ -19,6 +18,8 @@ import {
   union
 } from "valibot"
 
+const COLOR_LEN: number = 6
+
 const MIN_PORT: number = 1024
 const MAX_PORT: number = 65_535
 
@@ -30,7 +31,15 @@ const HMAC_MIN_LEN: number = 27
 const HMAC_MAX_LEN: number = 38
 
 const StringSchema = pipe(string(), trim(), nonEmpty())
-const ColorSchema = pipe(StringSchema, hexColor())
+const ColorSchema = pipe(
+  StringSchema,
+  regex(
+    // ! Desired: /^(?:#[\da-f]{6})$/i
+    createRegExp(exactly("#").at.lineStart(), charIn("0123456789abcdef").times(COLOR_LEN).at.lineEnd(), [
+      caseInsensitive
+    ])
+  )
+)
 const PortSchema = union([
   literal("random"),
   pipe(StringSchema, toNumber(), integer(), minValue(MIN_PORT), maxValue(MAX_PORT))
