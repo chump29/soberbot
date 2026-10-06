@@ -1,7 +1,8 @@
+import { printVars } from "@postfmly/logger"
 import { type Optional } from "@postfmly/types"
 
 import { bool, cleanEnv, type ExactValidator, makeExactValidator, str, url } from "envalid"
-import { anyOf, caseInsensitive, createRegExp, wordChar } from "magic-regexp"
+import { anyOf, caseInsensitive, createRegExp, exactly, wordChar } from "magic-regexp"
 import {
   hexColor,
   integer,
@@ -39,9 +40,9 @@ const TokenSchema = pipe(
   regex(
     createRegExp(
       anyOf(wordChar, "-").times.between(UID_MIN_LEN, UID_MAX_LEN).at.lineStart(),
-      ".",
+      exactly("."),
       anyOf(wordChar, "-").times.between(TS_MIN_LEN, TS_MAX_LEN),
-      ".",
+      exactly("."),
       anyOf(wordChar, "-").times.between(HMAC_MIN_LEN, HMAC_MAX_LEN).at.lineEnd(),
       [caseInsensitive]
     )
@@ -60,7 +61,7 @@ let fakeToken: Optional<string>
 if (Bun.env.NODE_ENV === "test") {
   const { fakerEN_US: fake } = await import("@faker-js/faker")
 
-  fakeURL = fake.internet.url()
+  fakeURL = fake.image.url({ height: 64, width: 64 })
 
   const word: string = "[a-zA-Z0-9]"
   fakeToken = fake.helpers.fromRegExp(
@@ -83,14 +84,7 @@ const env = cleanEnv(Bun.env, {
 })
 
 if (import.meta.main) {
-  type T = keyof typeof env
-
-  const REDACTED: T[] = ["TOKEN"]
-
-  console.table({
-    ...env,
-    ...Object.fromEntries(REDACTED.map((k: T): [T, string] => [k, "\x1b[31m[REDACTED]\x1b[0m"]))
-  })
+  printVars(env, ["TOKEN"])
 }
 
 export { env }
