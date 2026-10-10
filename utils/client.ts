@@ -69,7 +69,7 @@ class SoberBotClient implements ISoberBotClient {
     this.CLIENT =
       testClient ??
       new DiscordClient({
-        intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers],
+        intents: [GatewayIntentBits.Guilds],
         presence: {
           activities: [
             {
