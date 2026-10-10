@@ -66,8 +66,11 @@ class SoberBotDatabase implements ISoberBotDatabase {
   _db: Nullable<DBType> = null
 
   open(): void {
-    if (this._db && env.DEBUG) {
-      info("⚠️  Database already open")
+    if (this._db) {
+      if (env.DEBUG) {
+        info("⚠️  Database already open")
+      }
+
       return
     }
 
@@ -102,14 +105,17 @@ class SoberBotDatabase implements ISoberBotDatabase {
   }
 
   close(): void {
-    if (!this._db && env.DEBUG) {
-      info("⚠️  Database already closed")
+    if (!this._db) {
+      if (env.DEBUG) {
+        info("⚠️  Database already closed")
+      }
+
       return
     }
 
     this.client?.close()
-
     this.client = null
+
     this._db = null
 
     if (env.DEBUG) {

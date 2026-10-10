@@ -49,10 +49,8 @@ const getSubstanceName = (): string => fake.lorem.word()
 
 const getDate = (): string => dayjs(fake.date.past({ years: 10 })).format(DATE_FORMAT)
 
-const infoSpy: jest.Mock = spyOn(console, "info")
-
 beforeAll(async (): Promise<void> => {
-  infoSpy.mockReset()
+  spyOn(console, "info").mockImplementation((): void => undefined) // suppress
 
   DB.open()
 
@@ -127,8 +125,8 @@ await Promise.all(
 
         expect(await invoke(interaction)).toBeUndefined()
 
-        expect(interaction.deferReply).toHaveBeenCalled()
-        expect(interaction.editReply).toHaveBeenCalled()
+        expect(interaction.deferReply).toHaveBeenCalledTimes(1)
+        expect(interaction.editReply).toHaveBeenCalledTimes(1)
 
         const mockEditReply = interaction.editReply as ReturnType<typeof jest.fn>
         const firstCallArgs = mockEditReply.mock.calls
@@ -158,7 +156,7 @@ await Promise.all(
           })
           .with("ping", (): void => expect(payload.content).toInclude("Pong"))
           .with("set", (): void => expect(payload.content).not.toBeEmpty())
-          .otherwise((): void => {
+          .otherwise((): never => {
             throw new Error(`Payload tests not found for /${name}`)
           })
       })
