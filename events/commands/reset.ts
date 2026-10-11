@@ -38,11 +38,9 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  await DB.resetDate(interaction.user.id, (interaction.options.getString("name") as string).trim()).then(
-    async (msg: string): Promise<void> => {
-      await interaction.editReply({ content: `-# > ${msg}` })
-    }
-  )
+  await interaction.editReply({
+    content: `-# > ${await DB.resetDate(interaction.user.id, (interaction.options.getString("name") as string).trim())}`
+  })
 }
 
 export { create, invoke }

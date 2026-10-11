@@ -75,13 +75,13 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  await DB.setDate(
-    interaction.user.id,
-    interaction.user.displayName,
-    date.format(DATE_FORMAT),
-    (interaction.options.getString("name") as string).trim()
-  ).then(async (msg: string): Promise<void> => {
-    await interaction.editReply({ content: `-# > ${msg}` })
+  await interaction.editReply({
+    content: `-# > ${await DB.setDate(
+      interaction.user.id,
+      interaction.user.displayName,
+      date.format(DATE_FORMAT),
+      (interaction.options.getString("name") as string).trim()
+    )}`
   })
 }
 

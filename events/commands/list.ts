@@ -50,21 +50,21 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  await DB.getList(interaction.user.id).then(async (msg: IData | string): Promise<void> => {
-    if (typeof msg === "string") {
-      await interaction.editReply({ content: `-# > ${msg as string}` })
-    } else {
-      await interaction.editReply({
-        embeds: [
-          new EmbedBuilder()
-            .setColor(env.COLOR as HexColorString)
-            .setTitle(`${env.NAME} Dates for ${interaction.user.displayName}`)
-            .setFields(getFields(msg))
-            .toJSON()
-        ]
-      })
-    }
-  })
+  const msg: IData | string = await DB.getList(interaction.user.id)
+
+  if (typeof msg === "string") {
+    await interaction.editReply({ content: `-# > ${msg as string}` })
+  } else {
+    await interaction.editReply({
+      embeds: [
+        new EmbedBuilder()
+          .setColor(env.COLOR as HexColorString)
+          .setTitle(`${env.NAME} Dates for ${interaction.user.displayName}`)
+          .setFields(getFields(msg))
+          .toJSON()
+      ]
+    })
+  }
 }
 
 export { create, invoke }

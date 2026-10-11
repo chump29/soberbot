@@ -1,5 +1,7 @@
 import { parse } from "node:path"
 
+import { error } from "@postfmly/logger"
+
 import { mostReadable, random as randomColor, TinyColor } from "@ctrl/tinycolor"
 import { Canvas, type CanvasRenderingContext2D, registerFont } from "canvas"
 import {
@@ -102,27 +104,26 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  await DB.getDate(interaction.user.id, (interaction.options.getString("name") as string).trim()).then(
-    async (msg: string[]): Promise<void> => {
-      if (!msg[0]) {
-        await interaction.editReply({ content: "-# > ❌ Invalid response" })
+  const msg: string[] = await DB.getDate(interaction.user.id, (interaction.options.getString("name") as string).trim())
+  if (!msg[0]) {
+    await interaction.editReply({ content: "-# > ❌ Something went wrong" })
 
-        return
-      }
+    error("-# > ❌ Invalid response")
 
-      const isError: boolean = msg[0].startsWith("❌")
+    return
+  }
 
-      const reply: InteractionEditReplyOptions = {}
+  const isError: boolean = msg[0].startsWith("❌")
 
-      if (isError) {
-        reply.content = `-# > ${msg[0]}`
-      } else {
-        reply.files = [createImage(msg)]
-      }
+  const reply: InteractionEditReplyOptions = {}
 
-      await interaction.editReply(reply)
-    }
-  )
+  if (isError) {
+    reply.content = `-# > ${msg[0]}`
+  } else {
+    reply.files = [createImage(msg)]
+  }
+
+  await interaction.editReply(reply)
 }
 
 export { create, invoke }
