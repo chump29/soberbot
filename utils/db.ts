@@ -41,7 +41,7 @@ interface IData {
 }
 
 interface ISoberBotDatabase {
-  _db: Nullable<DBType>
+  readonly _db: Nullable<DBType>
   close: () => void
   deleteDate: (userId: string, name: string) => Promise<string>
   getAll: () => Promise<IData[] | string>
