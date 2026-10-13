@@ -104,8 +104,8 @@ await Promise.all(
       test("invoke", async (): Promise<void> => {
         const interaction: ChatInputCommandInteraction = {
           createdTimestamp: fake.date.past().getTime(),
-          deferReply: jest.fn().mockResolvedValue(undefined),
-          editReply: jest.fn().mockResolvedValue(undefined),
+          deferReply: jest.fn(),
+          editReply: jest.fn(),
           user: {
             displayName: fake.internet.displayName(),
             id: getUserId(),
@@ -136,19 +136,16 @@ await Promise.all(
         if (!payload) {
           throw new Error("Payload not found")
         }
+        const { data }: { data: APIEmbed } = EmbedBuilder.from(payload.embeds?.[0])
 
         match<string, void>(name)
           .with("all", (): void => {
-            const { data }: { data: APIEmbed } = EmbedBuilder.from(payload.embeds?.[0])
-
             expect(decimalToHex(data.color)).toBe(env.COLOR)
             expect(data.title).toStartWith(`${env.NAME} Dates`)
             expect(data.fields).not.toBeEmpty()
           })
           .with(P.union("delete", "list", "reset", "streak"), (): void => expect(payload.content).toInclude("❌"))
           .with("info", (): void => {
-            const { data }: { data: APIEmbed } = EmbedBuilder.from(payload.embeds?.[0])
-
             expect(decimalToHex(data.color)).toBe(env.COLOR)
             expect(data.author?.icon_url).toBe(env.LOGO_URL)
             expect(data.author?.name).toBe(`${env.NAME} v${version}`)
