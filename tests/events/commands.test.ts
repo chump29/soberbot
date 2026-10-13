@@ -138,7 +138,7 @@ await Promise.all(
         }
 
         match<string, void>(name)
-          .with(P.union("all"), (): void => {
+          .with("all", (): void => {
             const { data }: { data: APIEmbed } = EmbedBuilder.from(payload.embeds?.[0])
 
             expect(decimalToHex(data.color)).toBe(env.COLOR)
