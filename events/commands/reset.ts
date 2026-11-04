@@ -38,8 +38,11 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
+  // biome-ignore lint/style/noNonNullAssertion: required
+  const name = interaction.options.getString("name")!.trim()
+
   await interaction.editReply({
-    content: `-# > ${await DB.resetDate(interaction.user.id, (interaction.options.getString("name") as string).trim())}`
+    content: `-# > ${await DB.resetDate(interaction.user.id, name)}`
   })
 }
 

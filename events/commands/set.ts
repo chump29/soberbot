@@ -15,13 +15,13 @@ import { DATE_FORMAT, MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
 import { bucket } from "../../utils/bucket.ts"
 import { DB } from "../../utils/db.ts"
 
-const YEARS_AGO: number = 100
+const YEARS_AGO = 100
 
-const MIN_MONTH: number = 1
-const MAX_MONTH: number = 12
+const MIN_MONTH = 1
+const MAX_MONTH = 12
 
-const MIN_DAY: number = 1
-const MAX_DAY: number = 31
+const MIN_DAY = 1
+const MAX_DAY = 31
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
@@ -65,7 +65,7 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  const date: dayjs.Dayjs = dayjs(
+  const date = dayjs(
     `${interaction.options.getInteger("year")}-${interaction.options.getInteger("month")}-${interaction.options.getInteger("day")}`
   )
 
@@ -75,13 +75,11 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
+  // biome-ignore lint/style/noNonNullAssertion: required
+  const name = interaction.options.getString("name")!.trim()
+
   await interaction.editReply({
-    content: `-# > ${await DB.setDate(
-      interaction.user.id,
-      interaction.user.displayName,
-      date.format(DATE_FORMAT),
-      (interaction.options.getString("name") as string).trim()
-    )}`
+    content: `-# > ${DB.setDate(interaction.user.id, interaction.user.displayName, date.format(DATE_FORMAT), name)}`
   })
 }
 

@@ -8,11 +8,11 @@ import { type Nullable } from "@postfmly/types"
 import { default as pluralize } from "@jarrodek/pluralize"
 import { default as dayjs } from "dayjs"
 import { default as duration } from "dayjs/plugin/duration"
-import { and, eq, sql } from "drizzle-orm"
-import { drizzle } from "drizzle-orm/bun-sqlite"
+import { and, asc, eq, extractTablesFromSchema, sql } from "drizzle-orm"
+import { drizzle, type SQLiteBunTransaction } from "drizzle-orm/bun-sqlite"
 import { migrate } from "drizzle-orm/bun-sqlite/migrator"
 import { titleCase } from "title-case"
-import { type SafeParseResult, safeParse } from "valibot"
+import { safeParse } from "valibot"
 
 import {
   DATE_FORMAT,
@@ -28,6 +28,13 @@ import { env } from "./env.ts"
 
 dayjs.extend(duration)
 
+interface IRawData {
+  date: Nullable<string>
+  name: Nullable<string>
+  userId: string
+  userName: string
+}
+
 interface ISubstanceData {
   date: string
   name: string
@@ -41,32 +48,32 @@ interface IData {
 }
 
 interface ISoberBotDatabase {
-  readonly _db: Nullable<DBType>
   close: () => void
   deleteDate: (userId: string, name: string) => Promise<string>
   getAll: () => Promise<IData[] | string>
   getDate: (userId: string, name: string) => Promise<string[]>
   getList: (userId: string) => Promise<IData | string>
+  readonly instance: Nullable<DBType>
   open: () => void
   resetDate: (userId: string, name: string) => Promise<string>
-  setDate: (userId: string, userName: string, date: string, name: string) => Promise<string>
+  setDate: (userId: string, userName: string, date: string, name: string) => string
 }
 
-const schema: Record<string, unknown> = {
-  users,
-  substances,
+const schema = extractTablesFromSchema({
+  tables: { users, substances },
   relations
-}
+})
 
-// @ts-expect-error: schema
 type DBType = ReturnType<typeof drizzle<typeof schema>>
+
+type TxType = SQLiteBunTransaction<typeof schema>
 
 class SoberBotDatabase implements ISoberBotDatabase {
   private client: Nullable<Database> = null
-  _db: Nullable<DBType> = null
+  instance: Nullable<DBType> = null
 
   open(): void {
-    if (this._db) {
+    if (this.instance) {
       if (env.DEBUG) {
         info("⚠️  Database already open")
       }
@@ -74,7 +81,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
       return
     }
 
-    const dbPathName: string = join(env.DB_PATH, env.DB_NAME)
+    const dbPathName = join(env.DB_PATH, env.DB_NAME)
 
     this.client = new Database(dbPathName, {
       create: true,
@@ -89,13 +96,13 @@ class SoberBotDatabase implements ISoberBotDatabase {
       PRAGMA wal_checkpoint(TRUNCATE);
     `)
 
-    this._db = drizzle({
+    this.instance = drizzle({
       client: this.client,
       jit: true,
       relations
     })
 
-    migrate(this._db, {
+    migrate(this.instance, {
       migrationsFolder: env.DB_PATH
     })
 
@@ -105,7 +112,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
   }
 
   close(): void {
-    if (!this._db) {
+    if (!this.instance) {
       if (env.DEBUG) {
         info("⚠️  Database already closed")
       }
@@ -116,7 +123,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
     this.client?.close()
     this.client = null
 
-    this._db = null
+    this.instance = null
 
     if (env.DEBUG) {
       info("⏹️  Database closed")
@@ -124,18 +131,18 @@ class SoberBotDatabase implements ISoberBotDatabase {
   }
 
   private dbCheck(): DBType {
-    if (!this._db) {
+    if (!this.instance) {
       throw new Error("Database not open")
     }
 
-    return this._db
+    return this.instance
   }
 
   // * /delete <name|all>
   async deleteDate(userId: string, name: string): Promise<string> {
     if (name.toLowerCase() === "all") {
       try {
-        const [user]: Partial<IUser>[] = await this.dbCheck()
+        const [user] = await this.dbCheck()
           .delete(users)
           .where(eq(users.userId, userId))
           .returning({ userId: users.userId })
@@ -145,18 +152,20 @@ class SoberBotDatabase implements ISoberBotDatabase {
           throw new Error()
         }
       } catch (e: unknown) {
-        const msg: string = "❌ Could not delete all dates"
+        const msg = "❌ Could not delete all dates"
+
         error(msg, userId, e)
+
         return msg
       }
 
       return "✅ All dates deleted"
     }
 
-    const titleName: string = titleCase(name)
+    const titleName = titleCase(name)
 
     try {
-      const [substance]: Partial<ISubstance>[] = await this.dbCheck()
+      const [substance] = await this.dbCheck()
         .delete(substances)
         .where(eq(sql`lower(${substances.name})`, name.toLowerCase()))
         .returning({ userId: substances.userId })
@@ -165,8 +174,10 @@ class SoberBotDatabase implements ISoberBotDatabase {
         return `❌ Date not found for ${titleName}`
       }
     } catch (e: unknown) {
-      const msg: string = `❌ Could not delete date for ${titleName}`
+      const msg = `❌ Could not delete date for ${titleName}`
+
       error(msg, titleName, e)
+
       return msg
     }
 
@@ -175,12 +186,12 @@ class SoberBotDatabase implements ISoberBotDatabase {
 
   // * /reset <name>
   async resetDate(userId: string, name: string): Promise<string> {
-    const titleName: string = titleCase(name)
+    const titleName = titleCase(name)
 
     try {
-      const [substance]: Partial<ISubstance>[] = await this.dbCheck()
+      const [substance] = await this.dbCheck()
         .update(substances)
-        .set({ date: dayjs().format(DATE_FORMAT) } as ISubstance)
+        .set({ date: dayjs().format(DATE_FORMAT) })
         .where(and(eq(substances.userId, userId), eq(sql`lower(${substances.name})`, name.toLowerCase())))
         .returning({ userId: substances.userId })
 
@@ -188,8 +199,10 @@ class SoberBotDatabase implements ISoberBotDatabase {
         return `❌ Date not found for ${titleName}`
       }
     } catch (e: unknown) {
-      const msg: string = `❌ Could not reset date for ${titleName}`
+      const msg = `❌ Could not reset date for ${titleName}`
+
       error(msg, userId, e)
+
       return msg
     }
 
@@ -197,46 +210,51 @@ class SoberBotDatabase implements ISoberBotDatabase {
   }
 
   // * /set YYYY-MM-DD <name>
-  async setDate(userId: string, userName: string, date: string, name: string): Promise<string> {
-    const user: IUser = { userId, userName } satisfies IUser
+  setDate(userId: string, userName: string, date: string, name: string): string {
+    const user = { userId, userName } satisfies IUser
 
-    const u: SafeParseResult<UserSchema> = safeParse(UserSchema, user)
+    const u = safeParse(UserSchema, user)
     if (!u.success) {
-      const msg: string = "❌ Could not create user"
+      const msg = "❌ Could not create user"
+
       error(msg, user, u.issues[0].message)
+
       return msg
     }
 
-    const substance: ISubstance = { userId, date, name } satisfies ISubstance
+    const substance = { userId, date, name } satisfies ISubstance
 
-    const s: SafeParseResult<SubstanceSchema> = safeParse(SubstanceSchema, substance)
+    const s = safeParse(SubstanceSchema, substance)
     if (!s.success) {
-      const msg: string = "❌ Could not create substance"
+      const msg = "❌ Could not create substance"
+
       error(msg, substance, s.issues[0].message)
+
       return msg
     }
 
-    const titleName: string = titleCase(name)
+    const titleName = titleCase(name)
 
     try {
-      // @ts-expect-error: no types
-      await this.dbCheck().transaction(async (tx) => {
-        await tx
-          .insert(users)
+      this.dbCheck().transaction((tx: TxType): void => {
+        tx.insert(users)
           .values({ userId, userName } satisfies IUser)
           .onConflictDoNothing()
+          .run()
 
-        await tx
-          .insert(substances)
+        tx.insert(substances)
           .values({ userId, date, name } satisfies ISubstance)
           .onConflictDoUpdate({
-            set: { date } as ISubstance,
+            set: { date },
             target: [substances.userId, substances.name]
           })
+          .run()
       })
     } catch (e: unknown) {
-      const msg: string = `❌ Could not set date for ${titleName}`
+      const msg = `❌ Could not set date for ${titleName}`
+
       error(msg, userId, e)
+
       return msg
     }
 
@@ -244,9 +262,9 @@ class SoberBotDatabase implements ISoberBotDatabase {
   }
 
   static getStreak(date: string): string {
-    const diff: duration.Duration = dayjs.duration(dayjs().diff(dayjs(date)))
+    const diff = dayjs.duration(dayjs().diff(dayjs(date)))
 
-    const days: number = Math.floor(diff.asDays())
+    const days = Math.floor(diff.asDays())
 
     return pluralize("day", days, true)
   }
@@ -257,7 +275,7 @@ class SoberBotDatabase implements ISoberBotDatabase {
   async getDate(userId: string, name: string): Promise<string[]> {
     if (name.toLowerCase() === "all") {
       try {
-        const allSubstances: Partial<ISubstance>[] = await this.dbCheck()
+        const allSubstances = await this.dbCheck()
           .select({ date: substances.date, name: substances.name })
           .from(substances)
           .where(eq(substances.userId, userId))
@@ -267,20 +285,21 @@ class SoberBotDatabase implements ISoberBotDatabase {
           return ["❌ Streak(s) not found"]
         }
 
-        return allSubstances.map((s: Partial<ISubstance>): string =>
-          SoberBotDatabase.format(s.name as string, s.date as string)
-        )
+        // biome-ignore lint/style/noNonNullAssertion: required
+        return allSubstances.map((s: Partial<ISubstance>): string => SoberBotDatabase.format(s.name!, s.date!))
       } catch (e: unknown) {
-        const msg: string = "❌ Could not get all streaks"
+        const msg = "❌ Could not get all streaks"
+
         error(msg, e)
+
         return [msg]
       }
     }
 
-    const titleName: string = titleCase(name)
+    const titleName = titleCase(name)
 
     try {
-      const [substance]: Partial<ISubstance>[] = await this.dbCheck()
+      const [substance] = await this.dbCheck()
         .select({ date: substances.date, name: substances.name })
         .from(substances)
         .where(and(eq(substances.userId, userId), eq(sql`lower(${substances.name})`, name.toLowerCase())))
@@ -290,53 +309,68 @@ class SoberBotDatabase implements ISoberBotDatabase {
         return [`❌ Streak not found for ${titleName}`]
       }
 
-      return [SoberBotDatabase.format(substance.name as string, substance.date as string)]
+      return [SoberBotDatabase.format(substance.name, substance.date)]
     } catch (e: unknown) {
-      const msg: string = `❌ Could not get date for ${titleName}`
+      const msg = `❌ Could not get date for ${titleName}`
+
       error(msg, titleName, e)
+
       return [msg]
     }
+  }
+
+  private static convertData(data: IRawData[]): IData[] {
+    const groups = new Map<string, IData>()
+
+    for (const d of data) {
+      let group = groups.get(d.userId)
+      if (!group) {
+        group = {
+          substances: [],
+          userId: d.userId,
+          userName: d.userName
+        }
+        groups.set(d.userId, group)
+      }
+
+      if (d.date !== null && d.name !== null) {
+        const s = {
+          date: d.date,
+          name: d.name,
+          streak: SoberBotDatabase.getStreak(d.date)
+        } satisfies ISubstanceData
+        group.substances.push(s)
+      }
+    }
+
+    return Array.from(groups.values())
   }
 
   // * /all
   async getAll(): Promise<IData[] | string> {
     try {
-      const data: IData[] =
-        // @ts-expect-error: undefined
-        (await this.dbCheck().query.users.findMany({
-          orderBy: { userName: "asc" },
-          columns: {
-            userName: true
-          },
-          with: {
-            substances: {
-              orderBy: { name: "asc" },
-              columns: {
-                date: true,
-                name: true
-              }
-            }
-          }
-        })) ?? []
+      const data: IRawData[] =
+        (await this.dbCheck()
+          .select({
+            date: substances.date,
+            name: substances.name,
+            userId: users.userId,
+            userName: users.userName
+          })
+          .from(users)
+          .leftJoin(substances, eq(users.userId, substances.userId))
+          .orderBy(asc(users.userName), asc(substances.name))) ?? []
 
       if (data.length === 0) {
         return "❌ No dates to display"
       }
 
-      return data.map(
-        (d: IData): IData => ({
-          ...d,
-          substances: d.substances.map(
-            (s: ISubstanceData): ISubstanceData => ({
-              ...s,
-              streak: SoberBotDatabase.getStreak(s.date)
-            })
-          )
-        })
-      )
+      return SoberBotDatabase.convertData(data)
     } catch (e: unknown) {
-      const msg: string = "❌ Could not get all dates"
+      const msg = "❌ Could not get all dates"
+
       error(msg, e)
+
       return msg
     }
   }
@@ -344,49 +378,39 @@ class SoberBotDatabase implements ISoberBotDatabase {
   // * /list
   async getList(userId: string): Promise<IData | string> {
     try {
-      // @ts-expect-error: type
-      const data: Nullable<IData> =
-        // @ts-expect-error: undefined
-        (await this.dbCheck().query.users.findFirst({
-          columns: {
-            userId: true,
-            userName: true
-          },
-          where: {
-            // @ts-expect-error: type
-            userId
-          },
-          with: {
-            substances: {
-              orderBy: { name: "asc" },
-              columns: {
-                date: true,
-                name: true
-              }
-            }
-          }
-        })) ?? null
+      const data: IRawData[] =
+        (await this.dbCheck()
+          .select({
+            date: substances.date,
+            name: substances.name,
+            userId: users.userId,
+            userName: users.userName
+          })
+          .from(users)
+          .leftJoin(substances, eq(users.userId, substances.userId))
+          .where(eq(users.userId, userId))
+          .orderBy(asc(substances.name))) ?? []
 
-      if (!data) {
+      if (data.length === 0) {
         return "❌ No dates to display"
       }
 
-      data.substances = data.substances.map(
-        (s: ISubstanceData): ISubstanceData => ({
-          ...s,
-          streak: SoberBotDatabase.getStreak(s.date)
-        })
-      )
+      const [d] = SoberBotDatabase.convertData(data)
+      if (!d) {
+        throw new Error("Could not get data")
+      }
 
-      return data as IData
+      return d
     } catch (e: unknown) {
-      const msg: string = "❌ Could not get list"
+      const msg = "❌ Could not get list"
+
       error(msg, e)
+
       return msg
     }
   }
 }
 
-const DB: ISoberBotDatabase = new SoberBotDatabase()
+const DB = new SoberBotDatabase()
 
-export { DB, type IData, type ISubstanceData }
+export { DB, type IData, type ISubstanceData, type TxType }

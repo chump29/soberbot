@@ -1,4 +1,4 @@
-# ![SoberBot](./utils/images/soberbot.webp) SoberBot
+# ![SoberBot](./utils/images/soberbot.webp "SoberBot") SoberBot
 
 > - SoberBot for Discord
 
@@ -35,13 +35,13 @@
 #### Role Permissions:
 
 | ⚙️ Permissions |
-|:--------------:|
+| :------------: |
 |   EmbedLinks   |
 
 #### Commands:
 
 |    📋 Task     |        🔧 Command        | ⚙️ Member Permission |
-|:--------------:|:------------------------:|:--------------------:|
+| :------------: | :----------------------: | :------------------: |
 | List All Dates |          `/all`          |    Administrator     |
 |  Delete Date   |  `/delete <name\|all>`   |         None         |
 |      Info      |         `/info`          |         None         |
@@ -58,7 +58,7 @@
 #### Environment Variables:
 
 |     📝 Description      | 📌 Variable |  {...} Value   |
-|:-----------------------:|:-----------:|:--------------:|
+| :---------------------: | :---------: | :------------: |
 |        Activity         |  ACTIVITY   |    Tracking    |
 | Embed Color<sup>1</sup> |    COLOR    |    #78866b     |
 |         DB Name         |   DB_NAME   |  soberbot.db   |
@@ -72,7 +72,7 @@
 ##### From `@postfmly/logoserver`:
 
 | 📝 Description | 📌 Variable |    {...} Value    |
-|:--------------:|:-----------:|:-----------------:|
+| :------------: | :---------: | :---------------: |
 |   Logo Name    |  LOGO_NAME  |   soberbot.webp   |
 |   Local Path   |  LOGO_PATH  |  ./utils/images   |
 |      Port      |  LOGO_PORT  | **Random**/[port] |
@@ -80,12 +80,12 @@
 
 ##### From `@postfmly/checkrate`:
 
-###### *NOTE: Rate limited to 1 request per 1 second*
+###### _NOTE: Rate limited to 1 request per 1 second_
 
 #### Deployment:
 
 |  📜 Script  |  🔧 Command   |
-|:-----------:|:-------------:|
+| :---------: | :-----------: |
 |    Full     | `./build.sh`  |
 | Docker Only | `./docker.sh` |
 

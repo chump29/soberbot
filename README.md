@@ -1,16 +1,16 @@
-# ![SoberBot](./utils/images/soberbot.webp) SoberBot
+# ![SoberBot](./utils/images/soberbot.webp "SoberBot") SoberBot
 
 > - SoberBot for Discord
 
 ---
 
-![Bun](https://img.shields.io/badge/Bun-1.4.3-informational?style=plastic&logo=bun "Bun") &nbsp;
-![discord.js](https://img.shields.io/badge/discord.js-^14.27.0-informational?style=plastic&logo=discord.js "discord.js") &nbsp; <!-- markdownlint-disable MD013 -->
-![Drizzle](https://img.shields.io/badge/Drizzle-1.0.0--rc.4-informational?style=plastic&logo=drizzle "Drizzle") &nbsp;
+![Bun](https://img.shields.io/badge/Bun-1.4.4-informational?style=plastic&logo=bun "Bun") &nbsp;
+![discord.js](https://img.shields.io/badge/discord.js-14.28.1-informational?style=plastic&logo=discord.js "discord.js") &nbsp; <!-- markdownlint-disable MD013 -->
+![Drizzle](https://img.shields.io/badge/Drizzle-1.0.0--rc.5-informational?style=plastic&logo=drizzle "Drizzle") &nbsp;
 ![SQLite](https://img.shields.io/badge/SQLite-3.53.4-informational?style=plastic&logo=sqlite "SQLite")
 
 ![CodeQL](https://github.com/chump29/soberbot/workflows/CodeQL/badge.svg "CodeQL") &nbsp;
-![Coverage](https://img.shields.io/badge/Coverage-85.71%25-success?style=plastic&logo=jest "Coverage")
+![Coverage](https://img.shields.io/badge/Coverage-78.78%25-success?style=plastic&logo=jest "Coverage")
 
 ![NO AI](https://img.shields.io/badge/NO-AI-orange?style=plastic "NO AI") &nbsp;
 ![License](https://img.shields.io/github/license/chump29/soberbot?style=plastic&color=blueviolet&label=License&logo=gplv3 "GPLv3") &nbsp; <!-- markdownlint-disable MD013 -->
@@ -35,13 +35,13 @@
 #### Role Permissions:
 
 | ⚙️ Permissions |
-|:--------------:|
+| :------------: |
 |   EmbedLinks   |
 
 #### Commands:
 
 |    📋 Task     |        🔧 Command        | ⚙️ Member Permission |
-|:--------------:|:------------------------:|:--------------------:|
+| :------------: | :----------------------: | :------------------: |
 | List All Dates |          `/all`          |    Administrator     |
 |  Delete Date   |  `/delete <name\|all>`   |         None         |
 |      Info      |         `/info`          |         None         |
@@ -58,7 +58,7 @@
 #### Environment Variables:
 
 |     📝 Description      | 📌 Variable |  {...} Value   |
-|:-----------------------:|:-----------:|:--------------:|
+| :---------------------: | :---------: | :------------: |
 |        Activity         |  ACTIVITY   |    Tracking    |
 | Embed Color<sup>1</sup> |    COLOR    |    #78866b     |
 |         DB Name         |   DB_NAME   |  soberbot.db   |
@@ -72,7 +72,7 @@
 ##### From `@postfmly/logoserver`:
 
 | 📝 Description | 📌 Variable |    {...} Value    |
-|:--------------:|:-----------:|:-----------------:|
+| :------------: | :---------: | :---------------: |
 |   Logo Name    |  LOGO_NAME  |   soberbot.webp   |
 |   Local Path   |  LOGO_PATH  |  ./utils/images   |
 |      Port      |  LOGO_PORT  | **Random**/[port] |
@@ -80,12 +80,12 @@
 
 ##### From `@postfmly/checkrate`:
 
-###### *NOTE: Rate limited to 1 request per 1 second*
+###### _NOTE: Rate limited to 1 request per 1 second_
 
 #### Deployment:
 
 |  📜 Script  |  🔧 Command   |
-|:-----------:|:-------------:|
+| :---------: | :-----------: |
 |    Full     | `./build.sh`  |
 | Docker Only | `./docker.sh` |
 

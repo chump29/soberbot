@@ -4,7 +4,6 @@ import {
   type APIEmbedField,
   type ChatInputCommandInteraction,
   EmbedBuilder,
-  type HexColorString,
   InteractionContextType,
   MessageFlags,
   PermissionFlagsBits,
@@ -30,14 +29,14 @@ const getFields = (data: IData[]): APIEmbedField[] => {
     fields.push({
       name: "🚫  Nothing to show",
       value: ""
-    } as APIEmbedField)
+    } satisfies APIEmbedField)
   } else {
     for (const d of data) {
       fields.push({
         inline: true,
         name: d.userName,
         value: d.substances.map((s: ISubstanceData): string => `${s.name}: ${s.date} (${s.streak})`).join("\n")
-      } as APIEmbedField)
+      } satisfies APIEmbedField)
     }
   }
 
@@ -47,19 +46,15 @@ const getFields = (data: IData[]): APIEmbedField[] => {
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
   await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
-  const msg: IData[] | string = await DB.getAll()
+  const msg = await DB.getAll()
 
   if (typeof msg === "string") {
-    await interaction.editReply({ content: `-# > ${msg as string}` })
+    const m: string = msg // narrow
+
+    await interaction.editReply({ content: `-# > ${m}` })
   } else {
     await interaction.editReply({
-      embeds: [
-        new EmbedBuilder()
-          .setColor(env.COLOR as HexColorString)
-          .setTitle(`${env.NAME} Dates`)
-          .setFields(getFields(msg))
-          .toJSON()
-      ]
+      embeds: [new EmbedBuilder().setColor(env.COLOR).setTitle(`${env.NAME} Dates`).setFields(getFields(msg)).toJSON()]
     })
   }
 }

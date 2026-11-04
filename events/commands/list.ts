@@ -4,7 +4,6 @@ import {
   type APIEmbedField,
   type ChatInputCommandInteraction,
   EmbedBuilder,
-  type HexColorString,
   InteractionContextType,
   MessageFlags,
   type RESTPostAPIChatInputApplicationCommandsJSONBody,
@@ -29,13 +28,13 @@ const getFields = (data: IData): APIEmbedField[] => {
     fields.push({
       name: "🚫  Nothing to show",
       value: ""
-    } as APIEmbedField)
+    } satisfies APIEmbedField)
   } else {
     fields.push({
       inline: true,
       name: "_ _",
       value: data.substances.map((s: ISubstanceData): string => `${s.name}: ${s.date} (${s.streak})`).join("\n")
-    } as APIEmbedField)
+    } satisfies APIEmbedField)
   }
 
   return fields
@@ -50,15 +49,17 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  const msg: IData | string = await DB.getList(interaction.user.id)
+  const msg = await DB.getList(interaction.user.id)
 
   if (typeof msg === "string") {
-    await interaction.editReply({ content: `-# > ${msg as string}` })
+    const m: string = msg
+
+    await interaction.editReply({ content: `-# > ${m}` })
   } else {
     await interaction.editReply({
       embeds: [
         new EmbedBuilder()
-          .setColor(env.COLOR as HexColorString)
+          .setColor(env.COLOR)
           .setTitle(`${env.NAME} Dates for ${interaction.user.displayName}`)
           .setFields(getFields(msg))
           .toJSON()

@@ -2,19 +2,13 @@ import { default as assert } from "node:assert/strict"
 import { readdir } from "node:fs/promises"
 import { default as path } from "node:path"
 
-import { afterAll, beforeAll, describe, expect, jest, spyOn, test } from "bun:test"
+import { afterAll, beforeAll, describe, expect, mock, spyOn, test } from "bun:test"
 
 import { type Optional } from "@postfmly/types"
 
 import { fakerEN_US as fake } from "@faker-js/faker"
 import { default as dayjs } from "dayjs"
-import {
-  type APIEmbed,
-  type ChatInputCommandInteraction,
-  EmbedBuilder,
-  type RESTPostAPIChatInputApplicationCommandsJSONBody,
-  type User
-} from "discord.js"
+import { type APIEmbed, type ChatInputCommandInteraction, EmbedBuilder, type User } from "discord.js"
 import { match, P } from "ts-pattern"
 
 import {
@@ -26,24 +20,25 @@ import {
   substances,
   users
 } from "../../db/schema.ts"
+import { type ICreate } from "../../events/clientReady.ts"
+import { type IInvoke } from "../../events/interactionCreate.ts"
 import { author, version } from "../../package.json" with { type: "json" }
-import { DB } from "../../utils/db.ts"
+import { DB, type TxType } from "../../utils/db.ts"
 import { env } from "../../utils/env.ts"
 
-interface ICommandFile {
-  create: () => RESTPostAPIChatInputApplicationCommandsJSONBody
-  invoke: (interaction: ChatInputCommandInteraction) => Promise<void>
+if (!env.TEST_FULL) {
+  spyOn(console, "info").mockImplementation((): void => undefined)
 }
 
-const HEX_BASE: number = 16
-const COLOR_LEN: number = 6
+const HEX_BASE = 16
+const COLOR_LEN = 6
 const decimalToHex = (c: Optional<number>): string => (c ? `#${c.toString(HEX_BASE).padStart(COLOR_LEN, "0")}` : "N/A")
 
-const dir: string = "events/commands"
+const dir = "events/commands"
 
-const commands: string[] = (await readdir(dir)).filter((file: string): boolean => file.endsWith(".ts"))
+const commands = (await readdir(dir)).filter((file: string): boolean => file.endsWith(".ts"))
 
-const NUM_SUBSTANCES: number = 2
+const NUM_SUBSTANCES = 2
 
 const getUserId = (): string => fake.helpers.fromRegExp(`[0-9]{${MIN_USER_ID_LEN},${MAX_USER_ID_LEN}}`)
 
@@ -52,31 +47,30 @@ const getSubstanceName = (): string => fake.lorem.word()
 const getDate = (): string => dayjs(fake.date.past({ years: 10 })).format(DATE_FORMAT)
 
 beforeAll(async (): Promise<void> => {
-  spyOn(console, "info").mockImplementation((): void => undefined) // suppress
-
   DB.open()
 
-  assert(DB._db)
+  assert(DB.instance)
 
-  await DB._db.delete(users)
+  await DB.instance.delete(users)
 
-  const userId: string = getUserId()
+  const userId = getUserId()
 
-  // @ts-expect-error: no types
-  await DB._db.transaction(async (tx) => {
-    await tx.insert(users).values({
-      userId,
-      userName: fake.internet.username()
-    } satisfies IUser)
+  DB.instance.transaction((tx: TxType): void => {
+    tx.insert(users)
+      .values({
+        userId,
+        userName: fake.internet.username()
+      } satisfies IUser)
+      .run()
 
-    await tx
-      .insert(substances)
+    tx.insert(substances)
       .values(
         Array.from(
           { length: NUM_SUBSTANCES },
           (): ISubstance => ({ userId, date: getDate(), name: getSubstanceName() }) satisfies ISubstance
         )
       )
+      .run()
   })
 })
 
@@ -86,13 +80,13 @@ afterAll((): void => {
 
 await Promise.all(
   commands.map(async (command: string): Promise<void> => {
-    const { create, invoke } = (await import(`${path.join("../..", dir)}/${command}`)) satisfies ICommandFile
+    const file: ICreate & IInvoke = await import(`${path.join("../..", dir)}/${command}`)
 
-    const name: string = path.basename(command, ".ts")
+    const name = path.basename(command, ".ts")
 
     describe(`/${name}`, (): void => {
       test("create", (): void => {
-        const c: RESTPostAPIChatInputApplicationCommandsJSONBody = create()
+        const c = file.create()
 
         expect(c.name).toBe(name)
         expect(c.description).not.toBeEmpty()
@@ -101,54 +95,72 @@ await Promise.all(
 
       type YMD = "year" | "month" | "day"
 
+      const [mockDeferReply, mockEditReply] = [
+        mock<ChatInputCommandInteraction["deferReply"]>(),
+        mock<ChatInputCommandInteraction["editReply"]>()
+      ]
+
       test("invoke", async (): Promise<void> => {
-        const interaction: ChatInputCommandInteraction = {
-          createdTimestamp: fake.date.past().getTime(),
-          deferReply: jest.fn(),
-          editReply: jest.fn(),
-          user: {
-            displayName: fake.internet.displayName(),
-            id: getUserId(),
-            username: fake.internet.username()
-          } as User,
-          options: {
-            getInteger: jest.fn().mockImplementation((s: YMD): number => {
-              const date: dayjs.Dayjs = dayjs(fake.date.past())
+        expect(
+          await file.invoke(
+            createMock<ChatInputCommandInteraction>({
+              createdTimestamp: fake.date.past().getTime(),
+              deferReply: mockDeferReply,
+              editReply: mockEditReply,
+              user: createMock<User>({
+                displayName: fake.internet.displayName(),
+                id: getUserId(),
+                username: fake.internet.username()
+              }),
+              options: {
+                getInteger: mock<(s: YMD) => number>().mockImplementation((s: YMD): number => {
+                  const date: dayjs.Dayjs = dayjs(fake.date.past())
 
-              return match<YMD, number>(s)
-                .with("year", (): number => date.year())
-                .with("month", (): number => date.month() + 1)
-                .with("day", (): number => date.date())
-                .exhaustive()
-            }),
-            getString: jest.fn().mockReturnValue(fake.internet.username())
-          }
-        } as unknown as ChatInputCommandInteraction
+                  return match<YMD, number>(s)
+                    .with("year", (): number => date.year())
+                    .with("month", (): number => date.month() + 1)
+                    .with("day", (): number => date.date())
+                    .exhaustive()
+                }),
+                getString: mock<() => string>().mockReturnValue(fake.internet.username())
+              }
+            })
+          )
+        ).toBeUndefined()
 
-        expect(await invoke(interaction)).toBeUndefined()
+        expect(mockDeferReply).toHaveBeenCalledOnce()
+        expect(mockEditReply).toHaveBeenCalledOnce()
 
-        expect(interaction.deferReply).toHaveBeenCalledTimes(1)
-        expect(interaction.editReply).toHaveBeenCalledTimes(1)
-
-        const mockEditReply = interaction.editReply as ReturnType<typeof jest.fn>
-        const firstCallArgs = mockEditReply.mock.calls
-        const payload = firstCallArgs[0]?.[0]
-        if (!payload) {
+        const payload = mockEditReply.mock.calls[0]?.[0]
+        if (!payload || typeof payload !== "object") {
           throw new Error("Payload not found")
+        }
+
+        const isEmbed = (e: unknown): e is APIEmbed => typeof e === "object" && e !== null && !Array.isArray(e)
+
+        let data: APIEmbed
+        if ("embeds" in payload && Array.isArray(payload.embeds)) {
+          const [firstEmbed] = payload.embeds
+          if (!isEmbed(firstEmbed)) {
+            throw new Error("Embed not found")
+          }
+
+          ;({ data } = EmbedBuilder.from(firstEmbed))
+        }
+
+        let content = ""
+        if ("content" in payload && typeof payload.content === "string") {
+          ;({ content } = payload)
         }
 
         match<string, void>(name)
           .with("all", (): void => {
-            const { data }: { data: APIEmbed } = EmbedBuilder.from(payload.embeds?.[0])
-
             expect(decimalToHex(data.color)).toBe(env.COLOR)
             expect(data.title).toStartWith(`${env.NAME} Dates`)
             expect(data.fields).not.toBeEmpty()
           })
-          .with(P.union("delete", "list", "reset", "streak"), (): void => expect(payload.content).toInclude("❌"))
+          .with(P.union("delete", "list", "reset", "streak"), (): void => expect(content).toInclude("❌"))
           .with("info", (): void => {
-            const { data }: { data: APIEmbed } = EmbedBuilder.from(payload.embeds?.[0])
-
             expect(decimalToHex(data.color)).toBe(env.COLOR)
             expect(data.author?.icon_url).toBe(env.LOGO_URL)
             expect(data.author?.name).toBe(`${env.NAME} v${version}`)
@@ -156,8 +168,8 @@ await Promise.all(
             expect(data.description).not.toBeEmpty()
             expect(data.footer?.text).toEndWith(author.name)
           })
-          .with("ping", (): void => expect(payload.content).toInclude("Pong"))
-          .with("set", (): void => expect(payload.content).not.toBeEmpty())
+          .with("ping", (): void => expect(content).toInclude("Pong"))
+          .with("set", (): void => expect(content).not.toBeEmpty())
           .otherwise((): never => {
             throw new Error(`Payload tests not found for /${name}`)
           })

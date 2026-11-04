@@ -4,16 +4,16 @@ import { integer, snakeCase, text, unique } from "drizzle-orm/sqlite-core"
 import { createInsertSchema } from "drizzle-orm/valibot"
 import { type GenericSchema, isoDate, maxLength, maxValue, minLength, nonEmpty, pipe, string, trim } from "valibot"
 
-const MIN_NAME_LEN: number = 1
-const MAX_NAME_LEN: number = 30
+const MIN_NAME_LEN = 1
+const MAX_NAME_LEN = 30
 
-const MIN_USER_ID_LEN: number = 17
-const MAX_USER_ID_LEN: number = 19
+const MIN_USER_ID_LEN = 17
+const MAX_USER_ID_LEN = 19
 
-const MIN_USER_NAME_LEN: number = 2
-const MAX_USER_NAME_LEN: number = 32
+const MIN_USER_NAME_LEN = 2
+const MAX_USER_NAME_LEN = 32
 
-const DATE_FORMAT: string = "YYYY-MM-DD"
+const DATE_FORMAT = "YYYY-MM-DD"
 
 const StringSchema = pipe(string(), trim(), nonEmpty())
 

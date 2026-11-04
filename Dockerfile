@@ -16,11 +16,11 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
-
 COPY .husky/prepare.min.mjs ./.husky/
 COPY package.json bun.lock ./
 COPY patches/ ./patches/
+
+ENV BUN_INSTALL_CACHE_DIR=/.bun-cache
 
 RUN --mount=type=cache,target=/.bun-cache \
   bun ci --production

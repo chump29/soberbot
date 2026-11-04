@@ -3,7 +3,7 @@ import { parse } from "node:path"
 import { error } from "@postfmly/logger"
 
 import { mostReadable, random as randomColor, TinyColor } from "@ctrl/tinycolor"
-import { Canvas, type CanvasRenderingContext2D, registerFont } from "canvas"
+import { Canvas, registerFont } from "canvas"
 import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
@@ -36,44 +36,42 @@ const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
     .setContexts(InteractionContextType.Guild)
     .toJSON()
 
-const fontName: string = "Sniglet"
+const fontName = "Sniglet"
 registerFont(`./utils/images/${fontName}.ttf`, { family: fontName })
-const fontSize: number = 16
-const fontStyle: string = `${fontSize}px ${fontName}`
+const fontSize = 16
+const fontStyle = `${fontSize}px ${fontName}`
 
-const padding: number = 5
+const padding = 5
 
-const wOffset: number = padding * 2
+const wOffset: number = padding * 2 // widen
 
-const rowH: number = fontSize + padding * 2
+const rowH: number = fontSize + padding * 2 // widen
 
-const radius: number = 20
+const radius = 20
 
-const tmp: CanvasRenderingContext2D = new Canvas(1, 1).getContext("2d")
+const tmp = new Canvas(1, 1).getContext("2d")
 tmp.font = fontStyle
 
-const icon: string = "🔥 "
+const icon = "🔥 "
 const iconWidth: number = tmp.measureText(icon).width
 
 const blackOrWhite = (color: string): "black" | "white" => (new TinyColor(color).isLight() ? "black" : "white")
 
 const createImage = (txt: string[]): AttachmentBuilder => {
-  const w: number = Math.max(
-    ...txt.map((t: string): number => iconWidth + tmp.measureText(t).width + wOffset * 2 + padding)
-  )
+  const w = Math.max(...txt.map((t: string): number => iconWidth + tmp.measureText(t).width + wOffset * 2 + padding))
 
-  const h: number = rowH * txt.length
+  const h = rowH * txt.length
 
-  const img: Canvas = new Canvas(w, h)
-  const ctx: CanvasRenderingContext2D = img.getContext("2d")
+  const img = new Canvas(w, h)
+  const ctx = img.getContext("2d")
 
-  const bgColor: string = randomColor().toHexString()
+  const bgColor = randomColor().toHexString()
   ctx.fillStyle = bgColor
   ctx.beginPath()
   ctx.roundRect(0, 0, w, h, radius)
   ctx.fill()
 
-  const txtColor: string = blackOrWhite(bgColor)
+  const txtColor = blackOrWhite(bgColor)
 
   ctx.font = fontStyle
   ctx.textBaseline = "middle"
@@ -87,7 +85,8 @@ const createImage = (txt: string[]): AttachmentBuilder => {
     if (txt.length > 1) {
       y += i === 0 ? padding : -padding
     }
-    ctx.fillText(txt[i] as string, iconWidth + wOffset, y)
+    // biome-ignore lint/style/noNonNullAssertion: exists
+    ctx.fillText(txt[i]!, iconWidth + wOffset, y)
   }
 
   return new AttachmentBuilder(img.toBuffer("image/png"), {
@@ -104,7 +103,10 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  const msg: string[] = await DB.getDate(interaction.user.id, (interaction.options.getString("name") as string).trim())
+  // biome-ignore lint/style/noNonNullAssertion: required
+  const name = interaction.options.getString("name")!.trim()
+
+  const msg = await DB.getDate(interaction.user.id, name)
   if (!msg[0]) {
     await interaction.editReply({ content: "-# > ❌ Something went wrong" })
 
@@ -113,7 +115,7 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
     return
   }
 
-  const isError: boolean = msg[0].startsWith("❌")
+  const isError = msg[0].startsWith("❌")
 
   const reply: InteractionEditReplyOptions = {}
 
