@@ -44,10 +44,10 @@
     "scan:cve": "bun run --bun cve-lite --check-maintenance --prod-only --only-used",
     "scan:dupe": "bun dedupe --check",
     "sql": "bun run --bun drizzle-kit generate",
-    "test": "bun test --isolate --dots --preload ./tests/setup.ts --bail --check",
-    "test:coverage": "bun test --isolate --dots --coverage-dir ./tests/coverage --coverage-reporter=text --coverage-reporter=lcov --preload ./tests/setup.ts --bail --check",
-    "test:coverage:full": "TEST_FULL=true bun test --isolate --coverage-dir ./tests/coverage --coverage-reporter=text --coverage-reporter=lcov --preload ./tests/setup.ts --bail --check",
-    "test:full": "TEST_FULL=true bun test --isolate --preload ./tests/setup.ts --bail --check",
+    "test": "bun test --isolate --dots --bail --check",
+    "test:coverage": "bun test --isolate --dots --coverage-reporter=text --coverage-reporter=lcov --bail --check",
+    "test:coverage:full": "TEST_FULL=true bun test --isolate --coverage-reporter=text --coverage-reporter=lcov --bail --check",
+    "test:full": "TEST_FULL=true bun test --isolate --bail --check",
     "updates": "bunx --bun npm-check-updates --dep prod,dev --cooldown 0 --install never --packageManager bun --peer"
   },
   "dependencies": {
@@ -69,7 +69,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
     "@postfmly/config": "^1.6.41",
-    "@postfmly/types": "^1.0.14",
+    "@postfmly/types": "^1.0.15",
     "@total-typescript/ts-reset": "^0.6.1",
     "cve-lite-cli": "^1.42.0",
     "drizzle-kit": "1.0.0-rc.6",

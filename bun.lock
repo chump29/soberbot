@@ -23,7 +23,7 @@
       "devDependencies": {
         "@faker-js/faker": "^10.6.0",
         "@postfmly/config": "^1.6.41",
-        "@postfmly/types": "^1.0.14",
+        "@postfmly/types": "^1.0.15",
         "@total-typescript/ts-reset": "^0.6.1",
         "cve-lite-cli": "^1.42.0",
         "drizzle-kit": "1.0.0-rc.6",
@@ -245,7 +245,7 @@
 
     "@postfmly/logoserver": ["@postfmly/logoserver@1.4.2", "https://npm.postfmly.com/@postfmly/logoserver/-/logoserver-1.4.2.tgz", { "dependencies": { "@hono/bun": "^1.0.1", "@postfmly/logger": "^1.2.10", "@postfmly/types": "^1.0.14", "envalid": "^9.0.0", "get-port": "^7.2.0", "hono": "^4.13.19", "valibot": "^1.5.0" }, "cpu": [ "x64", "arm64", ] }, "sha512-h4QGQRWdcdwZAcB7hAdJdA3Da5ohAe3tonCGb+b8vjmbPxx7Jk3n8KyR6WnSrN+ZWyYoymsIaY4VIBiY/JXhsA=="],
 
-    "@postfmly/types": ["@postfmly/types@1.0.14", "https://npm.postfmly.com/@postfmly/types/-/types-1.0.14.tgz", { "cpu": [ "x64", "arm64", ] }, "sha512-gY4PRX1BBj31RC3LrvR1NRciDXD+HMnNqdHsrFtYNjjDiz2EHFpTLyK5LQbcoPVuIPCizQEe85mNCvQF65wWkg=="],
+    "@postfmly/types": ["@postfmly/types@1.0.15", "https://npm.postfmly.com/@postfmly/types/-/types-1.0.15.tgz", { "cpu": [ "x64", "arm64", ] }, "sha512-UnDcoTOL7YeE78hnPedk49R0xKYtL9/4o6kYqayTyvvrcP79/G95nCzSYay7qGu1TCJvCMrsGOLHgxXY0EWbSw=="],
 
     "@rolldown/pluginutils": ["@rolldown/pluginutils@1.1.1", "https://npm.postfmly.com/@rolldown/pluginutils/-/pluginutils-1.1.1.tgz", {}, "sha512-glFIJDvLNDtJhT9qrMFWLPbvS+skxgt4L0K8Ei2YtnhPysAJnsI7nyxSJxKj4ADeKX0OLjC4ntRkwpLOoS3rwA=="],
 
