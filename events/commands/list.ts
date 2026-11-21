@@ -43,7 +43,7 @@ const getFields = (data: IData): APIEmbedField[] => {
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
   await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
-  if (!bucket.allow(interaction.user.username)) {
+  if (!bucket.allow(interaction.user.id)) {
     await interaction.editReply({ content: "-# > ❌ Rate limit exceeded" })
 
     return
@@ -52,7 +52,7 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
   const msg = await DB.getList(interaction.user.id)
 
   if (typeof msg === "string") {
-    const m: string = msg
+    const m: string = msg // narrow
 
     await interaction.editReply({ content: `-# > ${m}` })
   } else {

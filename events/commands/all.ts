@@ -49,9 +49,7 @@ const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> =
   const msg = await DB.getAll()
 
   if (typeof msg === "string") {
-    const m: string = msg // narrow
-
-    await interaction.editReply({ content: `-# > ${m}` })
+    await interaction.editReply({ content: `-# > ${msg}` })
   } else {
     await interaction.editReply({
       embeds: [new EmbedBuilder().setColor(env.COLOR).setTitle(`${env.NAME} Dates`).setFields(getFields(msg)).toJSON()]

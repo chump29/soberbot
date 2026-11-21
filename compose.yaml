@@ -19,6 +19,6 @@ services:
       - homepage.icon=https://soberbot.postfmly.com/soberbot.webp
 
 volumes:
-  db:
+  db: {}
 
 networks: {}

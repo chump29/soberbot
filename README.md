@@ -4,21 +4,21 @@
 
 ---
 
-![Bun](https://img.shields.io/badge/Bun-1.4.4-informational?style=plastic&logo=bun "Bun") &nbsp;
-![discord.js](https://img.shields.io/badge/discord.js-14.28.1-informational?style=plastic&logo=discord.js "discord.js") &nbsp; <!-- markdownlint-disable MD013 -->
-![Drizzle](https://img.shields.io/badge/Drizzle-1.0.0--rc.5-informational?style=plastic&logo=drizzle "Drizzle") &nbsp;
-![SQLite](https://img.shields.io/badge/SQLite-3.53.4-informational?style=plastic&logo=sqlite "SQLite")
+![Bun](https://img.shields.io/badge/Bun-1.4.5-informational?style=plastic&logo=bun "Bun") &nbsp;
+![discord.js](https://img.shields.io/badge/discord.js-14.28.1-informational?style=plastic&logo=discord.js "discord.js") &nbsp;
+![Drizzle](https://img.shields.io/badge/Drizzle-1.0.0--rc.6-informational?style=plastic&logo=drizzle "Drizzle") &nbsp;
+![SQLite](https://img.shields.io/badge/SQLite-N/A-informational?style=plastic&logo=sqlite "SQLite")
 
 ![CodeQL](https://github.com/chump29/soberbot/workflows/CodeQL/badge.svg "CodeQL") &nbsp;
-![Coverage](https://img.shields.io/badge/Coverage-78.78%25-success?style=plastic&logo=jest "Coverage")
+![Coverage](https://img.shields.io/badge/Coverage-77.9%25-success?style=plastic&logo=jest "Coverage")
 
 ![NO AI](https://img.shields.io/badge/NO-AI-orange?style=plastic "NO AI") &nbsp;
-![License](https://img.shields.io/github/license/chump29/soberbot?style=plastic&color=blueviolet&label=License&logo=gplv3 "GPLv3") &nbsp; <!-- markdownlint-disable MD013 -->
+![License](https://img.shields.io/github/license/chump29/soberbot?style=plastic&color=blueviolet&label=License&logo=gplv3 "GPLv3") &nbsp;
 ![CVE Scan](https://img.shields.io/badge/CVE%20Scan-Pass-success?style=plastic&logo=owasp "CVE Scan")
 
 ---
 
-### What it does: <!-- markdownlint-disable-line MD001 -->
+### What it does:
 
 - Tracks sobriety dates
 
@@ -43,13 +43,13 @@
 |    📋 Task     |        🔧 Command        | ⚙️ Member Permission |
 | :------------: | :----------------------: | :------------------: |
 | List All Dates |          `/all`          |    Administrator     |
-|  Delete Date   |  `/delete <name\|all>`   |         None         |
+|  Delete Date   |     `/delete <name\      |        all>`         |
 |      Info      |         `/info`          |         None         |
 |   List Dates   |         `/list`          |         None         |
 |      Ping      |         `/ping`          |         None         |
 |   Reset Date   |     `/reset <name>`      |         None         |
 |    Set Date    | `/set YYYY-MM-DD <name>` |         None         |
-|  Show Streak   |  `/streak <name\|all>`   |         None         |
+|  Show Streak   |     `/streak <name\      |        all>`         |
 
 ---
 
@@ -67,7 +67,7 @@
 |        Bot Name         |    NAME     |    SoberBot    |
 |        Bot Token        |    TOKEN    |    \<token>    |
 
-###### <sup>1</sup> #RRGGBB format <!-- markdownlint-disable-line MD001 -->
+###### <sup>1</sup> #RRGGBB format
 
 ##### From `@postfmly/logoserver`:
 

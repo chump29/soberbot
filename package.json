@@ -30,13 +30,14 @@
     "env": "bun run --bun utils/env.ts",
     "env:test": "NODE_ENV=test bun run env",
     "preinstall": "bunx --bun only-allow bun",
-    "lint": "bun run lint:spell && bun run lint:biome && bun run lint:ts",
+    "lint": "bun run lint:spell && bun run lint:ts && bun run lint:biome",
     "lint:biome": "bun run --bun biome check --write --verbose --reporter=default --reporter=github --error-on-warnings",
     "lint:biome:ci": "bun run --bun biome ci --verbose --reporter=default --reporter=github --error-on-warnings",
-    "lint:ci": "bun run lint:biome:ci && bun run lint:ts",
+    "lint:ci": "bun run lint:ts && bun run lint:biome:ci",
     "lint:spell": "bun run --bun cspell --dot --verbose .",
     "lint:ts": "bun check",
-    "prepare": "bun run --bun .husky/prepare.min.mjs",
+    "prepare": "bun run --bun lefthook install || :",
+    "prepare:commit": "bun run --bun lefthook run pre-commit",
     "prod": "bun run --bun index.ts",
     "scan": "bun run scan:audit && bun run scan:cve && bun run scan:dupe",
     "scan:audit": "bun audit --production",
@@ -49,43 +50,43 @@
     "test:full": "TEST_FULL=true bun test --isolate --preload ./tests/setup.ts --bail --check",
     "updates": "bunx --bun npm-check-updates --dep prod,dev --cooldown 0 --install never --packageManager bun --peer"
   },
-  "lint-staged": {
-    "*": "bun run --bun cspell --dot --no-must-find-files",
-    "*.{json,md,ts,yaml}": "bun run --bun biome ci --no-errors-on-unmatched --error-on-warnings"
-  },
   "dependencies": {
-    "@ctrl/tinycolor": "^4.2.2",
     "@jarrodek/pluralize": "^1.0.2",
-    "@postfmly/checkrate": "^2.0.13",
-    "@postfmly/logger": "^1.2.6",
-    "@postfmly/logoserver": "^1.4.0",
+    "@postfmly/checkrate": "^2.0.15",
+    "@postfmly/logger": "^1.2.10",
+    "@postfmly/logoserver": "^1.4.2",
     "canvas": "^3.2.3",
+    "colord": "^2.14.0",
     "dayjs": "^1.11.23",
     "discord.js": "^14.28.1",
-    "drizzle-orm": "1.0.0-rc.5",
+    "drizzle-orm": "1.0.0-rc.6",
     "envalid": "9.0.0",
     "magic-regexp": "^0.11.2",
-    "short-unique-id": "^5.3.2",
+    "nanoid": "^6.0.2",
     "title-case": "^4.3.2",
     "valibot": "^1.5.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^10.6.0",
-    "@postfmly/config": "^1.6.19",
-    "@postfmly/types": "^1.0.12",
-    "cve-lite-cli": "^1.40.0",
-    "drizzle-kit": "1.0.0-rc.5",
+    "@postfmly/config": "^1.6.41",
+    "@postfmly/types": "^1.0.14",
+    "@total-typescript/ts-reset": "^0.6.1",
+    "cve-lite-cli": "^1.42.0",
+    "drizzle-kit": "1.0.0-rc.6",
     "expect-type": "^1.4.0",
-    "husky": "^9.1.7",
     "lcov-total": "^2.1.1",
-    "lint-staged": "^17.6.0",
+    "lefthook": "^2.2.2",
     "ts-pattern": "^5.9.2"
   },
-  "packageManager": "bun@1.4.4",
+  "packageManager": "bun@1.4.5",
   "engines": {
-    "bun": "^1.4.4"
+    "bun": "^1.4.5"
   },
   "engineStrict": true,
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
   "patchedDependencies": {
     "@jarrodek/pluralize@1.0.2": "patches/@jarrodek%2Fpluralize@1.0.2.patch"
   },

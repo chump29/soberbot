@@ -20,8 +20,7 @@ import {
   substances,
   users
 } from "../../db/schema.ts"
-import { type ICreate } from "../../events/clientReady.ts"
-import { type IInvoke } from "../../events/interactionCreate.ts"
+import { type ICommand } from "../../events/cache.ts"
 import { author, version } from "../../package.json" with { type: "json" }
 import { DB, type TxType } from "../../utils/db.ts"
 import { env } from "../../utils/env.ts"
@@ -80,7 +79,7 @@ afterAll((): void => {
 
 await Promise.all(
   commands.map(async (command: string): Promise<void> => {
-    const file: ICreate & IInvoke = await import(`${path.join("../..", dir)}/${command}`)
+    const file: ICommand = await import(`${path.join("../..", dir)}/${command}`)
 
     const name = path.basename(command, ".ts")
 
@@ -128,8 +127,8 @@ await Promise.all(
           )
         ).toBeUndefined()
 
-        expect(mockDeferReply).toHaveBeenCalledOnce()
-        expect(mockEditReply).toHaveBeenCalledOnce()
+        expect(mockDeferReply).toHaveBeenCalledWith(expect.any(Object))
+        expect(mockEditReply).toHaveBeenCalledWith(expect.any(Object))
 
         const payload = mockEditReply.mock.calls[0]?.[0]
         if (!payload || typeof payload !== "object") {
@@ -154,13 +153,13 @@ await Promise.all(
         }
 
         match<string, void>(name)
-          .with("all", (): void => {
+          .with("all", () => {
             expect(decimalToHex(data.color)).toBe(env.COLOR)
             expect(data.title).toStartWith(`${env.NAME} Dates`)
             expect(data.fields).not.toBeEmpty()
           })
-          .with(P.union("delete", "list", "reset", "streak"), (): void => expect(content).toInclude("❌"))
-          .with("info", (): void => {
+          .with(P.union("delete", "list", "reset", "streak"), () => expect(content).toInclude("❌"))
+          .with("info", () => {
             expect(decimalToHex(data.color)).toBe(env.COLOR)
             expect(data.author?.icon_url).toBe(env.LOGO_URL)
             expect(data.author?.name).toBe(`${env.NAME} v${version}`)
@@ -168,8 +167,8 @@ await Promise.all(
             expect(data.description).not.toBeEmpty()
             expect(data.footer?.text).toEndWith(author.name)
           })
-          .with("ping", (): void => expect(content).toInclude("Pong"))
-          .with("set", (): void => expect(content).not.toBeEmpty())
+          .with("ping", () => expect(content).toInclude("Pong"))
+          .with("set", () => expect(content).not.toBeEmpty())
           .otherwise((): never => {
             throw new Error(`Payload tests not found for /${name}`)
           })

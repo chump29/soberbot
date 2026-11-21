@@ -2,8 +2,9 @@ import { parse } from "node:path"
 
 import { error } from "@postfmly/logger"
 
-import { mostReadable, random as randomColor, TinyColor } from "@ctrl/tinycolor"
 import { Canvas, registerFont } from "canvas"
+import { colord, extend } from "colord"
+import { default as a11y } from "colord/plugins/a11y"
 import {
   AttachmentBuilder,
   type ChatInputCommandInteraction,
@@ -14,11 +15,13 @@ import {
   SlashCommandBuilder,
   type SlashCommandStringOption
 } from "discord.js"
-import { default as ShortUniqueId } from "short-unique-id"
+import { customAlphabet, urlAlphabet } from "nanoid"
 
 import { MAX_NAME_LEN, MIN_NAME_LEN } from "../../db/schema.ts"
 import { bucket } from "../../utils/bucket.ts"
 import { DB } from "../../utils/db.ts"
+
+extend([a11y]) // for isReadable
 
 const create = (): RESTPostAPIChatInputApplicationCommandsJSONBody =>
   new SlashCommandBuilder()
@@ -55,17 +58,32 @@ tmp.font = fontStyle
 const icon = "🔥 "
 const iconWidth: number = tmp.measureText(icon).width
 
-const blackOrWhite = (color: string): "black" | "white" => (new TinyColor(color).isLight() ? "black" : "white")
+const blackOrWhite = (color: string): "black" | "white" => (colord(color).isLight() ? "black" : "white")
+
+const ID_LEN = 11
+const alphanumeric = urlAlphabet.replace(/[-_]/gu, "")
+const randomId = customAlphabet(alphanumeric, ID_LEN)
+
+const MAX_HUE_DEGREES = 360
+const MIN_SATURATION = 70
+const SATURATION_RANGE = 30
+const MIN_LIGHTNESS = 20
+const LIGHTNESS_RANGE = 60
 
 const createImage = (txt: string[]): AttachmentBuilder => {
   const w = Math.max(...txt.map((t: string): number => iconWidth + tmp.measureText(t).width + wOffset * 2 + padding))
 
-  const h = rowH * txt.length
+  const h = rowH * txt.length + padding * 2
 
   const img = new Canvas(w, h)
   const ctx = img.getContext("2d")
 
-  const bgColor = randomColor().toHexString()
+  const bg = colord({
+    h: Math.floor(Math.random() * MAX_HUE_DEGREES),
+    l: MIN_LIGHTNESS + Math.random() * LIGHTNESS_RANGE,
+    s: MIN_SATURATION + Math.random() * SATURATION_RANGE
+  })
+  const bgColor = bg.toHex()
   ctx.fillStyle = bgColor
   ctx.beginPath()
   ctx.roundRect(0, 0, w, h, radius)
@@ -76,28 +94,25 @@ const createImage = (txt: string[]): AttachmentBuilder => {
   ctx.font = fontStyle
   ctx.textBaseline = "middle"
 
-  ctx.fillStyle = mostReadable(bgColor, ["red", "yellow"])?.toHexString() ?? txtColor
+  ctx.fillStyle = bg.contrast("#cc0000") > bg.contrast("#cccc00") ? "red" : "yellow"
   ctx.fillText(icon, wOffset, h / 2)
 
   ctx.fillStyle = txtColor
   for (let i = 0; i < txt.length; i++) {
-    let y = i * rowH + rowH / 2
-    if (txt.length > 1) {
-      y += i === 0 ? padding : -padding
-    }
+    const y = padding + i * rowH + rowH / 2
     // biome-ignore lint/style/noNonNullAssertion: exists
     ctx.fillText(txt[i]!, iconWidth + wOffset, y)
   }
 
   return new AttachmentBuilder(img.toBuffer("image/png"), {
-    name: `soberbot_streak_${new ShortUniqueId({ length: 11 }).rnd()}.png`
+    name: `soberbot_streak_${randomId()}.png`
   })
 }
 
 const invoke = async (interaction: ChatInputCommandInteraction): Promise<void> => {
   await interaction.deferReply({ flags: MessageFlags.Ephemeral })
 
-  if (!bucket.allow(interaction.user.username)) {
+  if (!bucket.allow(interaction.user.id)) {
     await interaction.editReply({ content: "-# > ❌ Rate limit exceeded" })
 
     return

@@ -16,7 +16,6 @@ RUN apk add --no-cache \
 
 WORKDIR /app
 
-COPY .husky/prepare.min.mjs ./.husky/
 COPY package.json bun.lock ./
 COPY patches/ ./patches/
 

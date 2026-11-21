@@ -62,9 +62,9 @@ const TokenSchema = pipe(
   )
 )
 
-const colorValidator = makeExactValidator<HexColorString>((s: string): HexColorString => parse(ColorSchema, s))
-const portValidator = makeExactValidator<"random" | number>((s: string): "random" | number => parse(PortSchema, s))
-const tokenValidator = makeExactValidator<string>((s: string): string => parse(TokenSchema, s))
+const colorValidator = makeExactValidator((s: string): HexColorString => parse(ColorSchema, s))
+const portValidator = makeExactValidator((s: string): "random" | number => parse(PortSchema, s))
+const tokenValidator = makeExactValidator((s: string): string => parse(TokenSchema, s))
 
 let fakeURL: Optional<string>
 let fakeToken: Optional<string>
